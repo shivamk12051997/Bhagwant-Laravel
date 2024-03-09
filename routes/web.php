@@ -1,0 +1,74 @@
+<?php
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AjaxController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\LotNoController;
+use App\Http\Controllers\Admin\WebsiteController;
+use App\Http\Controllers\Admin\MasterSizeController;
+use App\Http\Controllers\Admin\MasterColorController;
+use App\Http\Controllers\Admin\MasterWorkerController;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+Route::get('/', [HomeController::class, 'login'])->name('new_login');
+Route::get('/get_worker', [AjaxController::class, 'get_worker'])->name('get_worker');
+
+Auth::routes();
+
+// ___________________________ Admin Route ____________________________
+Route::group(['middleware' => ['auth','is_Admin']], function () {
+    Route::prefix('admin')->group(function () {
+        
+        // Website Setting
+        Route::get('website-setting', [WebsiteController::class, 'index'])->name('website.setting');
+        Route::post('website-setting/insert', [WebsiteController::class, 'insert'])->name('website.setting.insert');
+
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    });
+    // Size
+    Route::get('master/size', [MasterSizeController::class, 'index'])->name('master.size.index');
+    Route::get('master/size/datatable', [MasterSizeController::class, 'datatable'])->name('master.size.datatable');
+    Route::post('master/size/insert', [MasterSizeController::class, 'insert'])->name('master.size.insert');
+    Route::get('master/size/edit/{id}', [MasterSizeController::class, 'edit'])->name('master.size.edit');
+    Route::get('master/size/delete/{id}', [MasterSizeController::class, 'delete'])->name('master.size.delete');
+    Route::get('master/size/status/{id}', [MasterSizeController::class, 'status'])->name('master.size.status');
+    // Color
+    Route::get('master/color', [MasterColorController::class, 'index'])->name('master.color.index');
+    Route::get('master/color/datatable', [MasterColorController::class, 'datatable'])->name('master.color.datatable');
+    Route::post('master/color/insert', [MasterColorController::class, 'insert'])->name('master.color.insert');
+    Route::get('master/color/edit/{id}', [MasterColorController::class, 'edit'])->name('master.color.edit');
+    Route::get('master/color/delete/{id}', [MasterColorController::class, 'delete'])->name('master.color.delete');
+    Route::get('master/color/status/{id}', [MasterColorController::class, 'status'])->name('master.color.status');
+    // Worker
+    Route::get('master/worker', [MasterWorkerController::class, 'index'])->name('master.worker.index');
+    Route::get('master/worker/datatable', [MasterWorkerController::class, 'datatable'])->name('master.worker.datatable');
+    Route::post('master/worker/insert', [MasterWorkerController::class, 'insert'])->name('master.worker.insert');
+    Route::get('master/worker/edit/{id}', [MasterWorkerController::class, 'edit'])->name('master.worker.edit');
+    Route::get('master/worker/delete/{id}', [MasterWorkerController::class, 'delete'])->name('master.worker.delete');
+    Route::get('master/worker/status/{id}', [MasterWorkerController::class, 'status'])->name('master.worker.status');
+});
+
+// ___________________________ Admin & User Route ____________________________
+Route::group(['middleware' => ['auth','is_User']], function () {
+   // LotNo
+   Route::get('lot_no', [LotNoController::class, 'index'])->name('lot_no.index');
+   Route::get('lot_no/datatable', [LotNoController::class, 'datatable'])->name('lot_no.datatable');
+   Route::post('lot_no/insert', [LotNoController::class, 'insert'])->name('lot_no.insert');
+   Route::get('lot_no/edit/{id}', [LotNoController::class, 'edit'])->name('lot_no.edit');
+   Route::get('lot_no/delete/{id}', [LotNoController::class, 'delete'])->name('lot_no.delete');
+   Route::get('lot_no/show/{id}', [LotNoController::class, 'show'])->name('lot_no.show');
+   Route::get('lot_no/activity', [LotNoController::class, 'activity'])->name('lot_no.activity');
+   Route::post('lot_no/activity_insert', [LotNoController::class, 'activity_insert'])->name('lot_no.activity_insert');
+});
