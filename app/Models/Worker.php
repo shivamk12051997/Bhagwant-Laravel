@@ -22,4 +22,8 @@ class Worker extends Model
     {
     	return $this->belongsTo('App\Models\User','created_by_id','id');
     }
+    public function lot_activities()
+    {
+    	return $this->hasMany('App\Models\LotNoActivity','worker_id','id');
+    }
 }

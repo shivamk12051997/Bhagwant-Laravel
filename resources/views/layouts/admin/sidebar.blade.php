@@ -27,6 +27,11 @@
               <i data-feather="home"></i><span>Lot No.</span>
             </a>
           </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title link-nav" href="{{ route('worker_salary.index') }}">
+              <i data-feather="home"></i><span>Worker Salary</span>
+            </a>
+          </li>
           <li class="sidebar-main-title">
             <div>
               <h6>Settings</h6>

@@ -20,7 +20,7 @@ class LotNoController extends Controller
         if($request->value){
             $numbers = $request->value;
         }
-        $lot_no = LotNo::orderBy('id','desc')->paginate($numbers);
+        $lot_no = LotNo::orderBy('id','desc');
         if($request->search){
             $allColumnNames = Schema::getColumnListing((new LotNo)->getTable());
             $columnNames = array_filter($allColumnNames, fn($columnName) => !in_array($columnName, ['created_at', 'updated_at', 'id']));
@@ -29,9 +29,12 @@ class LotNoController extends Controller
                     $method = $index === 0 ? 'where' : 'orWhere';
                     $query->$method($column, 'LIKE', "%{$request->search}%");
                 }
-            })
-            ->latest()->paginate($numbers);
+            });
         }
+        if(($request->status ?? '') != 'All'){
+            $lot_no = $lot_no->where('status', $request->status);
+        }
+        $lot_no = $lot_no->orderBy('id','desc')->paginate($numbers);
         // $lot_no = LotNo::where('deleted_at', null)->latest()->get();
         return view('admin.lot_no.datatable', compact('lot_no'));
     }
@@ -84,10 +87,14 @@ class LotNoController extends Controller
     public function activity_insert(Request $request)
     {
         $input =  $request->all();
+        if($request->id == 0){
+            $input['created_by_id'] = auth()->user()->id;
+        }
         $lot_no = LotNo::find($request->lot_no_id);
         $lot_no->status = $request->action;
         $lot_no->is_complete = $request->action == 'Packing' ? 1 : 0;
         $lot_no->save();
+        $input['pcs'] = $lot_no->pcs;
         $lot_activity = LotNoActivity::updateOrCreate(['id' => $input['id']],$input);
 
         return $lot_activity;

@@ -7,7 +7,7 @@
 @endsection
 
 @section('breadcrumb-items')
-    <li class="breadcrumb-item">Dashboard</li>
+    {{-- <li class="breadcrumb-item">Dashboard</li> --}}
 @endsection
 
 @section('content')
@@ -15,9 +15,10 @@
     <div class="row widget-grid">
         <div class="col-md-3">
           <div class="card small-widget"> 
-            <div class="card-body primary"> <span class="f-light">New Orders</span>
+            <div class="card-body primary"> <span class="f-light">Total Lot No.</span>
               <div class="d-flex align-items-end gap-1">
-                <h4>2,435</h4><span class="font-primary f-12 f-w-500"><i class="icon-arrow-up"></i><span>+50%</span></span>
+                <h4>{{ App\Models\LotNo::count(); }}</h4>
+                {{-- <span class="font-primary f-12 f-w-500"><i class="icon-arrow-up"></i><span>+50%</span></span> --}}
               </div>
               <div class="bg-gradient font-primary"> 
                 <i data-feather="gift"></i>
@@ -27,11 +28,25 @@
         </div>
         <div class="col-md-3">
           <div class="card small-widget"> 
-            <div class="card-body warning"> <span class="f-light">New Orders</span>
+            <div class="card-body warning"> <span class="f-light">Complete Lot No.</span>
               <div class="d-flex align-items-end gap-1">
-                <h4>2,435</h4><span class="font-warning f-12 f-w-500"><i class="icon-arrow-up"></i><span>+50%</span></span>
+                <h4>{{ App\Models\LotNo::where('is_complete', '1')->count(); }}</h4>
+                {{-- <span class="font-warning f-12 f-w-500"><i class="icon-arrow-up"></i><span>+50%</span></span> --}}
               </div>
               <div class="bg-gradient font-warning"> 
+                <i data-feather="gift"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card small-widget"> 
+            <div class="card-body secondary"> <span class="f-light">Pending Lot No.</span>
+              <div class="d-flex align-items-end gap-1">
+                <h4>{{ App\Models\LotNo::where('is_complete', '0')->count(); }}</h4>
+                {{-- <span class="font-secondary f-12 f-w-500"><i class="icon-arrow-up"></i><span>+50%</span></span> --}}
+              </div>
+              <div class="bg-gradient font-secondary"> 
                 <i data-feather="gift"></i>
               </div>
             </div>

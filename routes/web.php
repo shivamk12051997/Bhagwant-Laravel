@@ -71,4 +71,9 @@ Route::group(['middleware' => ['auth','is_User']], function () {
    Route::get('lot_no/show/{id}', [LotNoController::class, 'show'])->name('lot_no.show');
    Route::get('lot_no/activity', [LotNoController::class, 'activity'])->name('lot_no.activity');
    Route::post('lot_no/activity_insert', [LotNoController::class, 'activity_insert'])->name('lot_no.activity_insert');
+
+   // Worker Salary
+   Route::get('worker_salary', [MasterWorkerController::class, 'worker_salary'])->name('worker_salary.index');
+   Route::get('worker_salary/datatable', [MasterWorkerController::class, 'worker_salary_datatable'])->name('worker_salary.datatable');
+   Route::get('worker_salary/show/{worker_id}', [MasterWorkerController::class, 'worker_salary_show'])->name('worker_salary.show');
 });

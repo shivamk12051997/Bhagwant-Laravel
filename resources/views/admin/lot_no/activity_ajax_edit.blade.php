@@ -45,7 +45,7 @@
                 <input type="text" class="form-control" name="action" id="" value="{{ $action ?? '' }}" readonly required>
             </div>
             <div class="col-md-12 form-group">
-                @if (($action ?? '') == 'Embroidery')
+                @if (($action ?? '') == 'Embroidery' && ($lot_activity->id ?? 0)  == 0)
                     <div class="form-check-size rtl-input" onchange="action_change()">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input me-2" id="embroidery" type="radio" name="action_change" value="Embroidery" checked="">

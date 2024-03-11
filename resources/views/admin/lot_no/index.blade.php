@@ -22,11 +22,11 @@
                     <div class="card-body">
                         <div class="dt-ext ">
                             <div id="datatable_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-6">
+                                <div class="row justify-content-between">
+                                    <div class="col-sm-12 col-md-6 col-lg-auto">
                                         <div class="dataTables_length" id="datatable_length">
                                             <label>Show 
-                                                <select name="datatable_length" aria-controls="datatable" class="form-control form-control-sm" id="datatable_page_show">
+                                                <select name="datatable_length" class="form-select" id="datatable_page_show">
                                                     <option value="50">50</option>
                                                     <option value="100">100</option>
                                                     <option value="150">150</option>
@@ -36,7 +36,24 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-sm-12 col-md-6">
+                                    <div class="col-sm-12 col-md-6 col-lg-auto">
+                                        <div class="dataTables_length" id="datatable_length">
+                                            <label>Work Role (Status): 
+                                                <select name="status" class="form-select" id="status">
+                                                    <option value="All">All</option>
+                                                    <option value="Cutting" {{ (request()->status ?? '') == 'Cutting' ? 'selected':'' }}>Cutting</option>
+                                                    <option value="Embroidery" {{ (request()->status ?? '') == 'Embroidery' ? 'selected':'' }}>Embroidery</option>
+                                                    <option value="Sewing Mech." {{ (request()->status ?? '') == 'Sewing Mech.' ? 'selected':'' }}>Sewing Mech.</option>
+                                                    <option value="Overlock" {{ (request()->status ?? '') == 'Overlock' ? 'selected':'' }}>Overlock</option>
+                                                    <option value="Kaj Button" {{ (request()->status ?? '') == 'Kaj Button' ? 'selected':'' }}>Kaj Button</option>
+                                                    <option value="Thread Cutting" {{ (request()->status ?? '') == 'Thread Cutting' ? 'selected':'' }}>Thread Cutting</option>
+                                                    <option value="Press" {{ (request()->status ?? '') == 'Press' ? 'selected':'' }}>Press</option>
+                                                    <option value="Packing" {{ (request()->status ?? '') == 'Packing' ? 'selected':'' }}>Packing</option>
+                                                </select>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-6 col-lg-auto">
                                         <div id="datatable_filter" class="dataTables_filter">
                                             <label>Search:<input type="search" id="datatable_search" class="form-control form-control-sm" placeholder="" aria-controls="datatable"></label>
                                         </div>
@@ -78,8 +95,9 @@
         function get_datatable(page){
             var value = $('#datatable_page_show').val();
             var search = $('#datatable_search').val();
+            var status = $('#status').val();
             var page = page ?? 1;
-            $.get('{{ route("lot_no.datatable") }}?page='+page+'&value='+value+'&search='+search+'', { _token: "{{csrf_token() }}"}, function(data){
+            $.get('{{ route("lot_no.datatable") }}?page='+page+'&value='+value+'&search='+search+'', { _token: "{{csrf_token() }}",status:status}, function(data){
                 $('#get_datatable').html(data);
                 feather.replace();
             });
