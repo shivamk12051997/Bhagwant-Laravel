@@ -22,7 +22,7 @@
                     <option value="" selected disabled>Select Option...</option>
                     <option value="Cutting" {{ ($worker->role ?? '') == 'Cutting' ? 'selected':'' }}>Cutting</option>
                     <option value="Embroidery" {{ ($worker->role ?? '') == 'Embroidery' ? 'selected':'' }}>Embroidery</option>
-                    <option value="Sewing Mech." {{ ($worker->role ?? '') == 'Sewing Mech.' ? 'selected':'' }}>Sewing Mech.</option>
+                    <option value="Sewing Machine" {{ ($worker->role ?? '') == 'Sewing Machine' ? 'selected':'' }}>Sewing Machine</option>
                     <option value="Overlock" {{ ($worker->role ?? '') == 'Overlock' ? 'selected':'' }}>Overlock</option>
                     <option value="Kaj Button" {{ ($worker->role ?? '') == 'Kaj Button' ? 'selected':'' }}>Kaj Button</option>
                     <option value="Thread Cutting" {{ ($worker->role ?? '') == 'Thread Cutting' ? 'selected':'' }}>Thread Cutting</option>

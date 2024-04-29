@@ -43,7 +43,7 @@
                                                     <option value="All">All</option>
                                                     <option value="Cutting" {{ (request()->status ?? '') == 'Cutting' ? 'selected':'' }}>Cutting</option>
                                                     <option value="Embroidery" {{ (request()->status ?? '') == 'Embroidery' ? 'selected':'' }}>Embroidery</option>
-                                                    <option value="Sewing Mech." {{ (request()->status ?? '') == 'Sewing Mech.' ? 'selected':'' }}>Sewing Mech.</option>
+                                                    <option value="Sewing Machine" {{ (request()->status ?? '') == 'Sewing Machine' ? 'selected':'' }}>Sewing Machine</option>
                                                     <option value="Overlock" {{ (request()->status ?? '') == 'Overlock' ? 'selected':'' }}>Overlock</option>
                                                     <option value="Kaj Button" {{ (request()->status ?? '') == 'Kaj Button' ? 'selected':'' }}>Kaj Button</option>
                                                     <option value="Thread Cutting" {{ (request()->status ?? '') == 'Thread Cutting' ? 'selected':'' }}>Thread Cutting</option>

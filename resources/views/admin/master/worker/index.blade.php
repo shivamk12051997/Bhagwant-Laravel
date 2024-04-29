@@ -32,9 +32,9 @@
                             <option value="" selected disabled>Select Option...</option>
                             <option value="Cutting">Cutting</option>
                             <option value="Embroidery">Embroidery</option>
-                            <option value="Sewing Mech.">Sewing Mech.</option>
+                            <option value="Sewing Machine">Sewing Machine</option>
                             <option value="Overlock">Overlock</option>
-                            <option value="Key Button">Key Button</option>
+                            <option value="Kaj Button">Kaj Button</option>
                             <option value="Thread Cutting">Thread Cutting</option>
                             <option value="Press">Press</option>
                             <option value="Packing">Packing</option>

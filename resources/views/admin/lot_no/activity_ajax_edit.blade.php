@@ -23,9 +23,9 @@
                         $action = 'Embroidery';
                     }
                     elseif(($lot_no->status ?? '') == 'Embroidery'){
-                        $action = 'Sewing Mech.';
+                        $action = 'Sewing Machine';
                     }
-                    elseif(($lot_no->status ?? '') == 'Sewing Mech.'){
+                    elseif(($lot_no->status ?? '') == 'Sewing Machine'){
                         $action = 'Overlock';
                     }
                     elseif(($lot_no->status ?? '') == 'Overlock'){
@@ -52,8 +52,8 @@
                             <label class="form-check-label" for="embroidery">Embroidery</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input me-2" id="sewing_mech" type="radio" name="action_change" value="Sewing Mech." {{ ($action ?? '') == 'Sewing Mech.' ? 'checked':'' }}>
-                            <label class="form-check-label" for="sewing_mech">Sewing Mech.</label>
+                            <input class="form-check-input me-2" id="sewing_mech" type="radio" name="action_change" value="Sewing Machine" {{ ($action ?? '') == 'Sewing Machine' ? 'checked':'' }}>
+                            <label class="form-check-label" for="sewing_mech">Sewing Machine</label>
                         </div>
                     </div>
                     <div class="form-check-size rtl-input" id="embroidery_box" onchange="embroidery_action()">
@@ -138,7 +138,7 @@
             $('#embroidery_box').show(300);
             embroidery_action();
         }
-        if(action_change == 'Sewing Mech.'){
+        if(action_change == 'Sewing Machine'){
             $('#embroidery_box').hide(300);
             $('#out_source_box').hide(300);
             $('#in_source_box').show(300);
