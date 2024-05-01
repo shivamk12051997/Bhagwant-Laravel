@@ -23,17 +23,17 @@
                         <input type="text" class="form-control" name="name" id="" placeholder="Enter Worker Name" required>
                     </div>
                     <div class="col-md-3 form-group mb-3">
-                        <h6>Phone Number <span>*</span></h6>
-                        <input type="text" class="form-control" name="phone" id="" placeholder="Enter Phone Number"  required>
+                        <h6>Worker Code/ID <span>*</span></h6>
+                        <input type="text" class="form-control" name="worker_code" id="" placeholder="Enter Worker Code/ID"  required>
                     </div>
                     <div class="col-md-3 form-group mb-3">
-                        <h6>Worker Role <span>*</span></h6>
-                        <select class="form-select" name="role" id="" required>
-                            <option value="" selected disabled>Select Option...</option>
+                        <h6>Worker Role <small class="text-muted">(Multiple)</small> <span>*</span></h6>
+                        <select class="form-select js-example-basic-multiple" name="role[]" multiple id="" required>
                             <option value="Cutting">Cutting</option>
-                            <option value="Embroidery">Embroidery</option>
+                            <option value="Printing/Embroidery">Printing/Embroidery</option>
                             <option value="Sewing Machine">Sewing Machine</option>
                             <option value="Overlock">Overlock</option>
+                            <option value="Linking">Linking</option>
                             <option value="Kaj Button">Kaj Button</option>
                             <option value="Thread Cutting">Thread Cutting</option>
                             <option value="Press">Press</option>
@@ -75,6 +75,7 @@
     <script>
         $(document).ready(function(){
             get_datatable();
+            $('.js-example-basic-multiple').select2();
         });
         function change_status(id){
             $('#ajax_html').html('<div class="loader-box"><div class="loader-37"></div></div>');

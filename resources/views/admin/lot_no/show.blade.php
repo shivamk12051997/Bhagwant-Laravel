@@ -212,7 +212,7 @@
                         <p class="d-flex justify-content-between mb-2">
                           <span class="date-content light-background">
                             Rs.{{ $item->price ?? 'N/A' }}
-                            @if (($item->action ?? '') == 'Embroidery')
+                            @if (($item->action ?? '') == 'Printing/Embroidery')
                               / {{ $item->embroidery_action ?? 'N/A' }}
                             @endif
                           </span>

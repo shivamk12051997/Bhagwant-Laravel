@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: May 01, 2024 at 01:12 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.0.28
+-- Host: 127.0.0.1:3306
+-- Generation Time: Apr 29, 2024 at 11:47 AM
+-- Server version: 10.11.7-MariaDB-cll-lve
+-- PHP Version: 7.2.34
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `bhagwant`
+-- Database: `u675099118_bhagwant`
 --
 
 -- --------------------------------------------------------
@@ -85,6 +85,14 @@ CREATE TABLE `lot_nos` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `lot_nos`
+--
+
+INSERT INTO `lot_nos` (`id`, `created_by_id`, `lot_no`, `color_id`, `size_id`, `pcs`, `gender`, `press`, `status`, `is_complete`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, '1', '5001', '4', '3', '32', 'Male', 'No', 'Packing', '1', NULL, '2024-04-02 10:17:08', '2024-04-02 10:19:29'),
+(2, '1', '5002', '3', '4', '40', 'Female', 'Yes', 'Sewing Mech.', '0', NULL, '2024-04-02 10:35:37', '2024-04-02 10:37:38');
+
 -- --------------------------------------------------------
 
 --
@@ -107,6 +115,22 @@ CREATE TABLE `lot_no_activities` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `lot_no_activities`
+--
+
+INSERT INTO `lot_no_activities` (`id`, `created_by_id`, `lot_no_id`, `worker_id`, `action`, `pcs`, `price`, `embroidery_action`, `party_name`, `overlock_action`, `remarks`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, '1', '1', '1', 'Cutting', '32', '2', NULL, NULL, NULL, 'DONE', NULL, '2024-04-02 10:17:08', '2024-04-02 10:17:08'),
+(2, '1', '1', '2', 'Embroidery', '32', '3', 'In Source', NULL, NULL, 'DONE BY REMARKS', NULL, '2024-04-02 10:17:56', '2024-04-02 10:17:56'),
+(3, '1', '1', '4', 'Sewing Mech.', '32', '2', NULL, NULL, NULL, 'ASDASD', NULL, '2024-04-02 10:18:26', '2024-04-02 10:18:26'),
+(4, '1', '1', '12', 'Overlock', '32', '3', NULL, NULL, NULL, 'ASDASDADS', NULL, '2024-04-02 10:18:40', '2024-04-02 10:18:40'),
+(5, '1', '1', '12', 'Overlock', '32', '3', NULL, NULL, NULL, 'ASDASDADS', NULL, '2024-04-02 10:18:40', '2024-04-02 10:18:40'),
+(6, '1', '1', '14', 'Thread Cutting', '32', '4', NULL, NULL, NULL, 'ASDASD', NULL, '2024-04-02 10:19:15', '2024-04-02 10:19:15'),
+(7, '1', '1', '17', 'Packing', '32', '3', NULL, NULL, NULL, 'ASDASDAD', NULL, '2024-04-02 10:19:29', '2024-04-02 10:19:29'),
+(8, '1', '2', '1', 'Cutting', '40', '2', NULL, NULL, NULL, NULL, NULL, '2024-04-02 10:35:37', '2024-04-02 10:35:37'),
+(9, '1', '2', '10', 'Sewing Mech.', '40', '3', 'In Source', NULL, NULL, NULL, NULL, '2024-04-02 10:35:57', '2024-04-02 10:38:19'),
+(10, '1', '2', '12', 'Overlock', '40', '5', NULL, NULL, NULL, NULL, NULL, '2024-04-02 10:36:15', '2024-04-02 10:36:15');
 
 -- --------------------------------------------------------
 
@@ -233,8 +257,8 @@ CREATE TABLE `workers` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `created_by_id` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
-  `worker_code` varchar(255) DEFAULT NULL,
-  `role` longtext DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `role` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
   `deleted_at` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -245,24 +269,24 @@ CREATE TABLE `workers` (
 -- Dumping data for table `workers`
 --
 
-INSERT INTO `workers` (`id`, `created_by_id`, `name`, `worker_code`, `role`, `status`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, '1', 'JASWINDER - 2', '12', '[\"Cutting\"]', '1', NULL, '2024-04-02 10:07:57', '2024-05-01 04:53:14'),
-(2, '1', 'GAUTAM MAURYA', '123', '[\"Printing\\/Embroidery\"]', '1', NULL, '2024-04-02 10:09:01', '2024-05-01 04:53:36'),
-(3, '1', 'ANIL', '1231', '[\"Sewing Machine\"]', '1', NULL, '2024-04-02 10:09:15', '2024-05-01 04:53:43'),
-(4, '1', 'RAJU', '3123', '[\"Sewing Machine\"]', '1', NULL, '2024-04-02 10:09:26', '2024-05-01 04:53:50'),
-(5, '1', 'SANOJ', '123123', '[\"Sewing Machine\"]', '1', NULL, '2024-04-02 10:10:12', '2024-05-01 04:53:58'),
-(6, '1', 'ROHIT', '123123', '[\"Sewing Machine\"]', '1', NULL, '2024-04-02 10:10:20', '2024-05-01 04:54:05'),
-(7, '1', 'VINOD', '12312', '[\"Sewing Machine\"]', '1', NULL, '2024-04-02 10:10:26', '2024-05-01 04:54:12'),
-(8, '1', 'RISHI', '5123', '[\"Sewing Machine\"]', '1', NULL, '2024-04-02 10:10:33', '2024-05-01 04:53:29'),
-(9, '1', 'DEEPAK', '123123', '[\"Sewing Machine\"]', '1', NULL, '2024-04-02 10:10:40', '2024-05-01 04:53:07'),
-(10, '1', 'ROHIT 2', '1231121', '[\"Sewing Machine\"]', '1', NULL, '2024-04-02 10:11:05', '2024-05-01 04:53:02'),
-(11, '1', 'RAMVIJAY', '12311', '[\"Sewing Machine\"]', '1', NULL, '2024-04-02 10:12:20', '2024-05-01 04:52:57'),
-(12, '1', 'MOHIT', '1231111', '[\"Overlock\"]', '1', NULL, '2024-04-02 10:13:08', '2024-05-01 04:52:51'),
-(13, '1', 'SANJAY', '123123123', '[\"Overlock\"]', '1', NULL, '2024-04-02 10:13:19', '2024-05-01 04:52:45'),
-(14, '1', 'UDAY', '31', '[\"Thread Cutting\"]', '1', NULL, '2024-04-02 10:14:12', '2024-05-01 04:52:39'),
-(15, '1', 'RAHUL JAIN', '12312', '[\"Kaj Button\"]', '1', NULL, '2024-04-02 10:14:35', '2024-05-01 04:52:32'),
-(16, '1', 'VIJAY', '1', '[\"Press\"]', '1', NULL, '2024-04-02 10:14:50', '2024-05-01 04:52:26'),
-(17, '1', 'UDAY (PACKING)', '1', '[\"Packing\"]', '1', NULL, '2024-04-02 10:15:26', '2024-05-01 04:52:17');
+INSERT INTO `workers` (`id`, `created_by_id`, `name`, `phone`, `role`, `status`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, '1', 'JASWINDER - 2', '12', 'Cutting', '1', NULL, '2024-04-02 10:07:57', '2024-04-02 10:07:57'),
+(2, '1', 'GAUTAM MAURYA', '123', 'Embroidery', '1', NULL, '2024-04-02 10:09:01', '2024-04-02 10:09:01'),
+(3, '1', 'ANIL', '1231', 'Sewing Mech.', '1', NULL, '2024-04-02 10:09:15', '2024-04-02 10:09:15'),
+(4, '1', 'RAJU', '3123', 'Sewing Mech.', '1', NULL, '2024-04-02 10:09:26', '2024-04-02 10:10:00'),
+(5, '1', 'SANOJ', '123123', 'Sewing Mech.', '1', NULL, '2024-04-02 10:10:12', '2024-04-02 10:10:12'),
+(6, '1', 'ROHIT', '123123', 'Sewing Mech.', '1', NULL, '2024-04-02 10:10:20', '2024-04-02 10:10:20'),
+(7, '1', 'VINOD', '12312', 'Sewing Mech.', '1', NULL, '2024-04-02 10:10:26', '2024-04-02 10:10:26'),
+(8, '1', 'RISHI', '5123', 'Sewing Mech.', '1', NULL, '2024-04-02 10:10:33', '2024-04-02 10:10:33'),
+(9, '1', 'DEEPAK', '123123', 'Sewing Mech.', '1', NULL, '2024-04-02 10:10:40', '2024-04-02 10:10:40'),
+(10, '1', 'ROHIT 2', '1231121', 'Sewing Mech.', '1', NULL, '2024-04-02 10:11:05', '2024-04-02 10:11:05'),
+(11, '1', 'RAMVIJAY', '12311', 'Sewing Mech.', '1', NULL, '2024-04-02 10:12:20', '2024-04-02 10:12:20'),
+(12, '1', 'MOHIT', '1231111', 'Overlock', '1', NULL, '2024-04-02 10:13:08', '2024-04-02 10:13:08'),
+(13, '1', 'SANJAY', '123123123', 'Overlock', '1', NULL, '2024-04-02 10:13:19', '2024-04-02 10:13:19'),
+(14, '1', 'UDAY', '31', 'Thread Cutting', '1', NULL, '2024-04-02 10:14:12', '2024-04-02 10:14:12'),
+(15, '1', 'RAHUL JAIN', '12312', 'Kaj Button', '1', NULL, '2024-04-02 10:14:35', '2024-04-02 10:36:39'),
+(16, '1', 'VIJAY', '1', 'Press', '1', NULL, '2024-04-02 10:14:50', '2024-04-02 10:14:50'),
+(17, '1', 'UDAY (PACKING)', '1', 'Packing', '1', NULL, '2024-04-02 10:15:26', '2024-04-02 10:15:26');
 
 --
 -- Indexes for dumped tables
@@ -352,13 +376,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `lot_nos`
 --
 ALTER TABLE `lot_nos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `lot_no_activities`
 --
 ALTER TABLE `lot_no_activities`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -388,7 +412,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `workers`
 --
 ALTER TABLE `workers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

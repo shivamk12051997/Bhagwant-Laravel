@@ -29,6 +29,7 @@ class MasterWorkerController extends Controller
             if($request->id == 0){
                 $input['created_by_id'] = auth()->user()->id;
             }
+            $input['role'] = json_encode($request->role ?? []);
             $input['status'] = $request->status ?? 0;
 
             $worker = Worker::updateOrCreate(['id' => $input['id']],$input);
@@ -92,7 +93,7 @@ class MasterWorkerController extends Controller
     public function worker_salary_show(Request $request, $worker_id)
     {
         $worker = Worker::find($worker_id);
-        $lot_activity = LotNoActivity::where('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->where('created_at','<=',($request->to_date ?? date('Y-m-d')))->where('worker_id',$worker_id)->orderBy('id','desc')->get();
+        $lot_activity = LotNoActivity::whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->where('worker_id',$worker_id)->orderBy('id','desc')->get();
         return view('admin.worker_salary.show', compact('worker','lot_activity'));
     }
 }

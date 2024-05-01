@@ -13,21 +13,21 @@
                 <input type="text" class="form-control" name="name" id="" value="{{ $worker->name ?? '' }}" required>
             </div>
             <div class="col-md-12 form-group mb-3">
-                <h6>Phone Number <span>*</span></h6>
-                <input type="text" class="form-control" name="phone" id="" value="{{ $worker->phone ?? '' }}" required>
+                <h6>Worker Code/ID <span>*</span></h6>
+                <input type="text" class="form-control" name="worker_code" id="" value="{{ $worker->worker_code ?? '' }}" required>
             </div>
             <div class="col-md-12 form-group mb-3">
-                <h6>Worker Role <span>*</span></h6>
-                <select class="form-select" name="role" id="" required>
-                    <option value="" selected disabled>Select Option...</option>
-                    <option value="Cutting" {{ ($worker->role ?? '') == 'Cutting' ? 'selected':'' }}>Cutting</option>
-                    <option value="Embroidery" {{ ($worker->role ?? '') == 'Embroidery' ? 'selected':'' }}>Embroidery</option>
-                    <option value="Sewing Machine" {{ ($worker->role ?? '') == 'Sewing Machine' ? 'selected':'' }}>Sewing Machine</option>
-                    <option value="Overlock" {{ ($worker->role ?? '') == 'Overlock' ? 'selected':'' }}>Overlock</option>
-                    <option value="Kaj Button" {{ ($worker->role ?? '') == 'Kaj Button' ? 'selected':'' }}>Kaj Button</option>
-                    <option value="Thread Cutting" {{ ($worker->role ?? '') == 'Thread Cutting' ? 'selected':'' }}>Thread Cutting</option>
-                    <option value="Press" {{ ($worker->role ?? '') == 'Press' ? 'selected':'' }}>Press</option>
-                    <option value="Packing" {{ ($worker->role ?? '') == 'Packing' ? 'selected':'' }}>Packing</option>
+                <h6>Worker Role <small class="text-muted">(Multiple)</small> <span>*</span></h6>
+                <select class="form-select js-example-basic-multiple" name="role[]" multiple id="" required>
+                    <option value="Cutting" {{ in_array('Cutting', (json_decode($worker->role ?? '[]') ?? [])) ? 'selected':'' }}>Cutting</option>
+                    <option value="Printing/Embroidery" {{ in_array('Printing/Embroidery', (json_decode($worker->role ?? '[]') ?? [])) ? 'selected':'' }}>Printing/Embroidery</option>
+                    <option value="Sewing Machine" {{ in_array('Sewing Machine', (json_decode($worker->role ?? '[]') ?? [])) ? 'selected':'' }}>Sewing Machine</option>
+                    <option value="Overlock" {{ in_array('Overlock', (json_decode($worker->role ?? '[]') ?? [])) ? 'selected':'' }}>Overlock</option>
+                    <option value="Linking" {{ in_array('Linking', (json_decode($worker->role ?? '[]') ?? [])) ? 'selected':'' }}>Linking</option>
+                    <option value="Kaj Button" {{ in_array('Kaj Button', (json_decode($worker->role ?? '[]') ?? [])) ? 'selected':'' }}>Kaj Button</option>
+                    <option value="Thread Cutting" {{ in_array('Thread Cutting', (json_decode($worker->role ?? '[]') ?? [])) ? 'selected':'' }}>Thread Cutting</option>
+                    <option value="Press" {{ in_array('Press', (json_decode($worker->role ?? '[]') ?? [])) ? 'selected':'' }}>Press</option>
+                    <option value="Packing" {{ in_array('Packing', (json_decode($worker->role ?? '[]') ?? [])) ? 'selected':'' }}>Packing</option>
                 </select>
             </div>
             <div class="col-md-12 form-group">
@@ -42,3 +42,7 @@
         <button type="submit" class="btn btn-primary">Save</button>
     </div>
 </form>
+
+<script>
+    $('.js-example-basic-multiple').select2();
+</script>

@@ -172,7 +172,9 @@
             <div class="card">
               <div class="card-body">
                 <div class="text-center">
-                  <h5>{{ $worker->name ?? 'N/A' }}</h5>
+                  <div class="media-size-email mb-3"><img class="me-3 rounded-circle" src="{{ asset('user.png') }}" alt="" width="80px"></div>
+                  <h5>{{ $worker->name ?? 'N/A' }} <br> <small class="text-muted">({{ $worker->worker_code ?? 'N/A' }})</small></h5>
+                  
                   <span class="badge badge-{{ ($worker->status ?? '') == 1 ? 'success':'danger' }}">{{ ($worker->status ?? '') == 1 ? 'Active':'Inactive' }}</span>
                 </div>
                 <hr>
@@ -188,8 +190,13 @@
                   @endphp
                   <li><b>Total QTY:</b> {{ $totalQty ?? 'N/A' }}</li>
                   <li><b>Total Earning:</b> {{ $totalEarnings ?? 'N/A' }}</li>
-                  <li><b>Phone Number:</b> {{ $worker->phone ?? 'N/A' }}</li>
-                  <li><b>Worker Role:</b> {{ $worker->role ?? 'N/A' }}</li>
+                  {{-- <li><b>Phone Number:</b> {{ $worker->phone ?? 'N/A' }}</li> --}}
+                  <li>
+                    <b>Worker Role:</b> 
+                    @foreach ((json_decode($worker->role ?? '[]') ?? []) as $role)
+                        <span class="badge badge-primary ">{{ $role }}</span>
+                    @endforeach
+                  </li>
                 </ul>
               </div>
             </div>

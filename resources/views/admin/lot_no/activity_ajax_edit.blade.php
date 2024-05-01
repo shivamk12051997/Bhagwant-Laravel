@@ -20,15 +20,15 @@
                     $action = $lot_activity->action;
                 }else{
                     if(($lot_no->status ?? '') == 'Cutting'){
-                        $action = 'Embroidery';
+                        $action = 'Printing/Embroidery';
                     }
-                    elseif(($lot_no->status ?? '') == 'Embroidery'){
+                    elseif(($lot_no->status ?? '') == 'Printing/Embroidery'){
                         $action = 'Sewing Machine';
                     }
                     elseif(($lot_no->status ?? '') == 'Sewing Machine'){
                         $action = 'Overlock';
                     }
-                    elseif(($lot_no->status ?? '') == 'Overlock'){
+                    elseif(($lot_no->status ?? '') == 'Overlock' || ($lot_no->status ?? '') == 'Linking'){
                         $action = 'Kaj Button';
                     }
                     elseif(($lot_no->status ?? '') == 'Kaj Button'){
@@ -45,11 +45,11 @@
                 <input type="text" class="form-control" name="action" id="" value="{{ $action ?? '' }}" readonly required>
             </div>
             <div class="col-md-12 form-group">
-                @if (($action ?? '') == 'Embroidery' && ($lot_activity->id ?? 0)  == 0)
+                @if (($action ?? '') == 'Printing/Embroidery' && ($lot_activity->id ?? 0)  == 0)
                     <div class="form-check-size rtl-input" onchange="action_change()">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input me-2" id="embroidery" type="radio" name="action_change" value="Embroidery" checked="">
-                            <label class="form-check-label" for="embroidery">Embroidery</label>
+                            <input class="form-check-input me-2" id="embroidery" type="radio" name="action_change" value="Printing/Embroidery" checked="">
+                            <label class="form-check-label" for="embroidery">Printing/Embroidery</label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input me-2" id="sewing_mech" type="radio" name="action_change" value="Sewing Machine" {{ ($action ?? '') == 'Sewing Machine' ? 'checked':'' }}>
@@ -73,6 +73,18 @@
                         </div>
                     </div>
                 @endif
+                @if (($action ?? '') == 'Overlock' || ($action ?? '') == 'Linking')
+                <div class="form-check-size rtl-input" onchange="action_change()">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input me-2" id="overlock" type="radio" name="action_change" value="Overlock" checked="">
+                        <label class="form-check-label" for="overlock">Overlock</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input me-2" id="linking" type="radio" name="action_change" value="Linking" {{ ($action ?? '') == 'Linking' ? 'checked':'' }}>
+                        <label class="form-check-label" for="linking">Linking</label>
+                    </div>
+                </div>
+                @endif
                 @if (($action ?? '') == 'Kaj Button' && ($lot_no->gender ?? '') == 'Male')
                 <div class="form-check-size rtl-input" onchange="action_change()">
                     <div class="form-check form-check-inline">
@@ -86,11 +98,11 @@
                 </div>
                 @endif
             </div>
-            <div class="col-md-12 form-group mb-3" id="in_source_box" style="display: {{ ($action ?? '') == 'Embroidery' ? ($lot_activity->embroidery_action ?? '') == 'Out Source' ? 'none':'block':'' }}">
+            <div class="col-md-12 form-group mb-3" id="in_source_box" style="display: {{ ($action ?? '') == 'Printing/Embroidery' ? ($lot_activity->embroidery_action ?? '') == 'Out Source' ? 'none':'block':'' }}">
                 <h6><span class="text-dark" id="action_text">{{ ($action ?? '') }}</span> Master <span>*</span></h6>
-                <select class="form-select js-example-basic-single" name="worker_id" id="worker_id" {{ ($action ?? '') == 'Embroidery' ? ($lot_activity->embroidery_action ?? '') == 'Out Source' ? '':'required':'required' }}>
+                <select class="form-select js-example-basic-single" name="worker_id" id="worker_id" {{ ($action ?? '') == 'Printing/Embroidery' ? ($lot_activity->embroidery_action ?? '') == 'Out Source' ? '':'required':'required' }}>
                     <option value="" selected disabled>Select Option...</option>
-                    @foreach (App\Models\Worker::where('role',$action)->where('status',1)->latest()->get() as $worker)
+                    @foreach (App\Models\Worker::whereJsonContains('role',($action ?? ''))->where('status',1)->latest()->get() as $worker)
                     <option value="{{ $worker->id }}" {{ ($lot_activity->worker_id ?? '') == $worker->id ? 'selected':'' }}>{{ $worker->name }}</option>
                     @endforeach
                 </select>
@@ -134,7 +146,7 @@
     }
     function action_change(){
         var action_change = $('input[name="action_change"]:checked').val();
-        if(action_change == 'Embroidery'){
+        if(action_change == 'Printing/Embroidery'){
             $('#embroidery_box').show(300);
             embroidery_action();
         }

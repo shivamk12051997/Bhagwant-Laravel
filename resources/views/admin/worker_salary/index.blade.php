@@ -82,6 +82,7 @@
             get_datatable(page);    
         });
         function get_datatable(page){
+            $('#get_datatable').html('<div class="loader-box"><div class="loader-37"></div></div>');
             var value = $('#datatable_page_show').val();
             var search = $('#datatable_search').val();
             var from_date = $('#from_date').val();

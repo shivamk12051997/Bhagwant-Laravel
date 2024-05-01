@@ -42,7 +42,7 @@
                                                 <select name="status" class="form-select" id="status">
                                                     <option value="All">All</option>
                                                     <option value="Cutting" {{ (request()->status ?? '') == 'Cutting' ? 'selected':'' }}>Cutting</option>
-                                                    <option value="Embroidery" {{ (request()->status ?? '') == 'Embroidery' ? 'selected':'' }}>Embroidery</option>
+                                                    <option value="Printing/Embroidery" {{ (request()->status ?? '') == 'Printing/Embroidery' ? 'selected':'' }}>Printing/Embroidery</option>
                                                     <option value="Sewing Machine" {{ (request()->status ?? '') == 'Sewing Machine' ? 'selected':'' }}>Sewing Machine</option>
                                                     <option value="Overlock" {{ (request()->status ?? '') == 'Overlock' ? 'selected':'' }}>Overlock</option>
                                                     <option value="Kaj Button" {{ (request()->status ?? '') == 'Kaj Button' ? 'selected':'' }}>Kaj Button</option>
@@ -93,6 +93,7 @@
             get_datatable(page);
         });
         function get_datatable(page){
+            $('#get_datatable').html('<div class="loader-box"><div class="loader-37"></div></div>');
             var value = $('#datatable_page_show').val();
             var search = $('#datatable_search').val();
             var status = $('#status').val();

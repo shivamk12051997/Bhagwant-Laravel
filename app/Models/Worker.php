@@ -13,7 +13,7 @@ class Worker extends Model
     protected $fillable = [
         'created_by_id',
         'name',
-        'phone',
+        'worker_code',
         'role',
         'status',
     ];

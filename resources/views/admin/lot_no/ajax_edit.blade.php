@@ -39,7 +39,7 @@
                 <h6>Cutting Master <span>*</span></h6>
                 <select class="form-select js-example-basic-single" name="worker_id" id="worker_id" required>
                     <option value="" selected disabled>Select Option...</option>
-                    @foreach (App\Models\Worker::where('role','Cutting')->where('status',1)->latest()->get() as $worker)
+                    @foreach (App\Models\Worker::whereJsonContains('role','Cutting')->where('status',1)->latest()->get() as $worker)
                         <option value="{{ $worker->id }}" {{ ($lot_no->lot_activities[0]->worker_id ?? '') == $worker->id ? 'selected':'' }}>{{ $worker->name }}</option>
                     @endforeach
                 </select>

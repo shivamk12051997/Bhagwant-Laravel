@@ -4,7 +4,7 @@
             <tr>
                 <th>#</th>
                 <th>Name</th>
-                <th>Phone Number</th>
+                <th>Worker Code/ID</th>
                 <th>Worker Role</th>
                 <th>Status</th>
                 <th>Created At</th>
@@ -16,8 +16,12 @@
             <tr>
                 <td>{{ $key+1 }}</td>
                 <td>{{ $item->name ?? 'N/A' }}</td>
-                <td>{{ $item->phone ?? 'N/A' }}</td>
-                <td>{{ $item->role ?? 'N/A' }}</td>
+                <td>{{ $item->worker_code ?? 'N/A' }}</td>
+                <td>
+                    @foreach ((json_decode($item->role ?? '[]') ?? []) as $role)
+                        <span class="badge badge-primary ">{{ $role }}</span>
+                    @endforeach
+                </td>
                 <td>
                     <span class="badge badge-{{ $item->status == '1' ? 'success':'danger' }} pointer" id="status_{{ $item->id }}" onclick="change_status({{ $item->id }})">{{ $item->status == '1' ? 'Active':'Inactive' }}</span>
                 </td>
