@@ -22,7 +22,11 @@ use App\Http\Controllers\Admin\MasterWorkerController;
 |
 */
 Route::get('/', [HomeController::class, 'login'])->name('new_login');
+Route::get('/lot_activity_delete', [HomeController::class, 'lot_activity_delete'])->name('lot_activity_delete');
+Route::post('edit_profile/insert', [HomeController::class, 'edit_profile_insert'])->name('edit_profile.insert');
+Route::get('edit_profile/', [HomeController::class, 'edit_profile'])->name('edit_profile');
 Route::get('/get_worker', [AjaxController::class, 'get_worker'])->name('get_worker');
+Route::get('/get_worker_price', [AjaxController::class, 'get_worker_price'])->name('get_worker_price');
 
 Auth::routes();
 

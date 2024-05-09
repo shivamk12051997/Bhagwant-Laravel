@@ -40,8 +40,12 @@
                             <option value="Packing">Packing</option>
                         </select>
                     </div>
-                    <div class="col-auto form-group pt-2">
-                        <button type="submit" class="btn btn-primary">Add Worker Master</button>
+                    <div class="col-md-2 form-group mb-3">
+                        <h6>Price <span>*</span></h6>
+                        <input type="number" step="any" class="form-control" name="price" id="" value="{{ $worker->price ?? '' }}" required>
+                    </div>
+                    <div class="col-md-1 form-group pt-2">
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>

@@ -6,6 +6,7 @@
                 <th>Name</th>
                 <th>Worker Code/ID</th>
                 <th>Worker Role</th>
+                <th>Price</th>
                 <th>Status</th>
                 <th>Created At</th>
                 <th>Options</th>
@@ -22,6 +23,7 @@
                         <span class="badge badge-primary ">{{ $role }}</span>
                     @endforeach
                 </td>
+                <td>{{ $item->price ?? 'N/A' }}</td>
                 <td>
                     <span class="badge badge-{{ $item->status == '1' ? 'success':'danger' }} pointer" id="status_{{ $item->id }}" onclick="change_status({{ $item->id }})">{{ $item->status == '1' ? 'Active':'Inactive' }}</span>
                 </td>

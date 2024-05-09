@@ -33,20 +33,24 @@
             </div>
             <div class="col-md-6 form-group mb-3">
                 <h6>PCS <span>*</span></h6>
-                <input type="number" class="form-control" name="pcs" id="" value="{{ $lot_no->pcs ?? '' }}" required>
+                <input type="number" step="any" class="form-control" name="pcs" id="" value="{{ $lot_no->pcs ?? '' }}" required>
             </div>
             <div class="col-md-6 form-group mb-3">
                 <h6>Cutting Master <span>*</span></h6>
-                <select class="form-select js-example-basic-single" name="worker_id" id="worker_id" required>
+                <select class="form-select js-example-basic-single" name="worker_id" id="worker_id" onchange="get_worker_price()" required>
                     <option value="" selected disabled>Select Option...</option>
                     @foreach (App\Models\Worker::whereJsonContains('role','Cutting')->where('status',1)->latest()->get() as $worker)
                         <option value="{{ $worker->id }}" {{ ($lot_no->lot_activities[0]->worker_id ?? '') == $worker->id ? 'selected':'' }}>{{ $worker->name }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-6 form-group mb-3">
+            <div class="col-md-3 form-group mb-3">
                 <h6>Per Price <span>*</span></h6>
-                <input type="number" class="form-control" name="price" id="" value="{{ $lot_no->lot_activities[0]->price ?? '' }}" required>
+                <input type="number" step="any" class="form-control" name="price" id="price" value="{{ $lot_no->lot_activities[0]->price ?? '' }}" required>
+            </div>
+            <div class="col-md-3 form-group mb-3">
+                <h6>Date <span>*</span></h6>
+                <input type="date" class="form-control" name="date" id="" value="{{ $lot_no->lot_activities[0]->date ?? date('Y-m-d') }}" required>
             </div>
             <div class="col-md-6 form-group mb-3">
                 <h6>Gender <span>*</span></h6>
@@ -84,3 +88,15 @@
         <button type="submit" class="btn btn-primary">Save</button>
     </div>
 </form>
+
+<script>
+    function get_worker_price(id){
+        $('#price').val('');
+        $('#price').attr('disabled',true);
+        var worker_id = $('#worker_id').val();
+        $.get('{{ url('get_worker_price') }}',{worker_id:worker_id}, function(data){
+            $('#price').val(data);
+            $('#price').attr('disabled',false);
+        });
+    }
+</script>

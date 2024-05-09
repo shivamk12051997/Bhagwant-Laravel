@@ -219,6 +219,7 @@
                           <th>Per Price</th>
                           <th>Total Earn</th>
                           <th>Date</th>
+                          <th>Created Date</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -231,6 +232,7 @@
                           <td>{{ $item->pcs ?? 'N/A' }}</td>
                           <td>{{ $item->price ?? 'N/A' }}</td>
                           <td>{{ ($item->pcs ?? 0) * ($item->price ?? 0) }}</td>
+                          <td>{{ ($item->date ?? '') == '' ? "N/A" : date('d M,Y',strtotime($item->date)) }}</td>
                           <td>{{ date('d M,Y h:i A',strtotime($item->created_at)) }}</td>
                         </tr>
                       @endforeach

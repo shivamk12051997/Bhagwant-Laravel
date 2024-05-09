@@ -15,6 +15,7 @@ class Worker extends Model
         'name',
         'worker_code',
         'role',
+        'price',
         'status',
     ];
 

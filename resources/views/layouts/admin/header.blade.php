@@ -16,25 +16,25 @@
       <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle" data-feather="align-center"></i></div>
     </div>
     <div class="left-header col-xxl-5 col-xl-6 col-lg-5 col-md-4 col-sm-3 p-0">
-      <div class="notification-slider">
+      {{-- <div class="notification-slider">
         <div class="d-flex h-100"> <img src="{{ asset('assets/images/giftools.gif') }}" alt="gif">
-          {{-- <h6 class="mb-0 f-w-400"><span class="font-primary">Don't Miss Out! </span><span class="f-light">Out new update has been release.</span></h6><i class="icon-arrow-top-right f-light"></i> --}}
+          <h6 class="mb-0 f-w-400"><span class="font-primary">Don't Miss Out! </span><span class="f-light">Out new update has been release.</span></h6><i class="icon-arrow-top-right f-light"></i>
         </div>
-      </div>
+      </div> --}}
     </div>
     <div class="nav-right col-xxl-7 col-xl-6 col-md-7 col-8 pull-right right-header p-0 ms-auto">
       <ul class="nav-menus">
        
-        <li>                         <span class="header-search">
+        {{-- <li>                         <span class="header-search">
           <i data-feather="search"></i></span></li>
         
-        <li>
+        <li> --}}
           <div class="mode">
             <i class="fa fa-moon-o"></i>
           </div>
         </li>
         
-        <li class="onhover-dropdown">
+        {{-- <li class="onhover-dropdown">
           <div class="notification-box">
             <i data-feather="bell"></i><span class="badge rounded-pill badge-secondary">4 </span>
           </div>
@@ -56,7 +56,7 @@
               <li><a class="f-w-700" href="index.html#">Check all</a></li>
             </ul>
           </div>
-        </li>
+        </li> --}}
         <li class="profile-nav onhover-dropdown pe-0 py-0">
           <div class="media profile-media"><img class="b-r-10" src="{{ asset('assets/images/dashboard/profile.png') }}" alt="">
             <div class="media-body"><span>{{ auth()->user()->name }}</span>
@@ -67,7 +67,7 @@
             {{-- <li><a href="index.html#"><i data-feather="user"></i><span>Account </span></a></li>
             <li><a href="index.html#"><i data-feather="mail"></i><span>Inbox</span></a></li>
             <li><a href="index.html#"><i data-feather="file-text"></i><span>Taskboard</span></a></li> --}}
-            <li><a href="index.html#"><i data-feather="settings"></i><span>Settings</span></a></li>
+            <li><a href="#" data-bs-toggle="modal" data-bs-target="#edit_profile_modal" onclick="edit_profile_modal()"><i data-feather="settings"></i><span>Edit Profile</span></a></li>
             <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i data-feather="log-in"> </i><span>Log Out</span></a></li>
           </ul>
           <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -87,3 +87,19 @@
     <script class="empty-template" type="text/x-handlebars-template"><div class="EmptyMessage">Your search turned up 0 results. This most likely means the backend is down, yikes!</div></script>
   </div>
 </div>
+
+<div class="modal fade" id="edit_profile_modal" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+      <form action="{{ route('edit_profile.insert') }}" method="post" class="modal-content" id="edit_profile_from" enctype="multipart/form-data">
+          
+      </form>
+  </div>
+</div>
+
+<script>
+  function edit_profile_modal(){
+      $.get('{{ url('edit_profile') }}', function(data){
+          $('#edit_profile_from').html(data);
+      });
+  }
+</script>

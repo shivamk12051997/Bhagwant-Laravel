@@ -100,16 +100,20 @@
             </div>
             <div class="col-md-12 form-group mb-3" id="in_source_box" style="display: {{ ($action ?? '') == 'Printing/Embroidery' ? ($lot_activity->embroidery_action ?? '') == 'Out Source' ? 'none':'block':'' }}">
                 <h6><span class="text-dark" id="action_text">{{ ($action ?? '') }}</span> Master <span>*</span></h6>
-                <select class="form-select js-example-basic-single" name="worker_id" id="worker_id" {{ ($action ?? '') == 'Printing/Embroidery' ? ($lot_activity->embroidery_action ?? '') == 'Out Source' ? '':'required':'required' }}>
+                <select class="form-select js-example-basic-single" name="worker_id" id="worker_id" onchange="get_worker_price()" {{ ($action ?? '') == 'Printing/Embroidery' ? ($lot_activity->embroidery_action ?? '') == 'Out Source' ? '':'required':'required' }}>
                     <option value="" selected disabled>Select Option...</option>
                     @foreach (App\Models\Worker::whereJsonContains('role',($action ?? ''))->where('status',1)->latest()->get() as $worker)
                     <option value="{{ $worker->id }}" {{ ($lot_activity->worker_id ?? '') == $worker->id ? 'selected':'' }}>{{ $worker->name }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-12 form-group mb-3">
+            <div class="col-md-6 form-group mb-3">
                 <h6> <span class="text-dark" id="price_text">Per Price</span> <span>*</span></h6>
-                <input type="number" class="form-control" name="price" id="" value="{{ $lot_activity->price ?? '' }}" required>
+                <input type="number" step="any" class="form-control" name="price" id="price" value="{{ $lot_activity->price ?? '' }}" required>
+            </div>
+            <div class="col-md-6 form-group mb-3">
+                <h6>Date <span>*</span></h6>
+                <input type="date" class="form-control" name="date" id="" value="{{ $lot_no->lot_activities[0]->date ?? date('Y-m-d') }}" required>
             </div>
             <div class="col-md-12 form-group mb-3">
                 <h6>Remarks</small> <span>*</span></h6>
@@ -123,8 +127,18 @@
 </form>
 
 <script>
+    function get_worker_price(id){
+        $('#price').val('');
+        $('#price').attr('disabled',true);
+        var worker_id = $('#worker_id').val();
+        $.get('{{ url('get_worker_price') }}',{worker_id:worker_id}, function(data){
+            $('#price').val(data);
+            $('#price').attr('disabled',false);
+        });
+    }
     function get_worker(){
         var action = $('input[name="action"]').val();
+        $('#price').val('');
         $('#worker_id').attr('disabled',true);
         $.get('{{ url('get_worker') }}',{action:action}, function(data){
             $('#worker_id').html(data);
