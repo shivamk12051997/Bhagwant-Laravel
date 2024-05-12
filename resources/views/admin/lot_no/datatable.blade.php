@@ -1,4 +1,5 @@
-<div class="dt-ext table-responsive">
+<form action="{{ route('lot_no.multiple_delete') }}" method="POST" class="dt-ext table-responsive">
+    @csrf
     <table class="table table-striped table-hover">
         <thead>
             <tr>
@@ -17,7 +18,7 @@
         <tbody>
             @foreach ($lot_no as $key => $item)
             <tr>
-                <td>{{ $lot_no->firstItem() + $loop->index }}</td>
+                <td>{{ $lot_no->firstItem() + $loop->index }} <input type="checkbox" class="form-check-input" name="lot_no_id[]" value="{{ $item->id }}" id=""></td>
                 <td>{{ $item->lot_no ?? 'N/A' }}</td>
                 <td>{{ $item->color->name ?? 'N/A' }}</td>
                 <td>{{ $item->size->name ?? 'N/A' }}</td>
@@ -65,7 +66,8 @@
             @endforeach
         </tbody>
     </table>
-</div>
+    <input type="submit" value="Delete Selected" class="btn btn-danger btn-sm" name="submit" id="submit" onclick="return confirm('Are you sure?')">
+</form>
 
 <div>
     {{$lot_no->links()}}

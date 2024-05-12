@@ -30,10 +30,10 @@
                     <option value="Packing" {{ in_array('Packing', (json_decode($worker->role ?? '[]') ?? [])) ? 'selected':'' }}>Packing</option>
                 </select>
             </div>
-            <div class="col-md-12 form-group mb-3">
+            {{-- <div class="col-md-12 form-group mb-3">
                 <h6>Price <span>*</span></h6>
                 <input type="number" step="any" class="form-control" name="price" id="price" value="{{ $worker->price ?? '' }}" required>
-            </div>
+            </div> --}}
             <div class="col-md-12 form-group">
                 <h6>Status</h6>
                 <label class="switch">

@@ -22,11 +22,11 @@
                         <span class="badge badge-primary ">{{ $role }}</span>
                     @endforeach
                 </td>
-                <td>{{ $item->lot_activities()->whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->sum('pcs') ?? 0 }}</td>
+                <td>{{ $item->lot_activities()->whereDate('date','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('date','<=',($request->to_date ?? date('Y-m-d')))->sum('pcs') ?? 0 }}</td>
                 {{-- <td>
-                    {{ ($item->lot_activities()->whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->sum('price') ?? 0) * $pcs }}
+                    {{ ($item->lot_activities()->whereDate('date','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('date','<=',($request->to_date ?? date('Y-m-d')))->sum('price') ?? 0) * $pcs }}
                 </td> --}}
-                <td>{{ optional($item->lot_activities()->whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->selectRaw('SUM(pcs * price) AS total')->first())->total ?? '-' }}</td>
+                <td>{{ optional($item->lot_activities()->whereDate('date','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('date','<=',($request->to_date ?? date('Y-m-d')))->selectRaw('SUM(pcs * price) AS total')->first())->total ?? '-' }}</td>
                 <td>
                     <a href="{{route('worker_salary.show',$item->id)}}?from_date={{$request->from_date}}&to_date={{$request->to_date}}" class="text-primary p-1 f-22" data-toggle="tooltip" title="Show">
                         <i class="fa fa-eye"></i>

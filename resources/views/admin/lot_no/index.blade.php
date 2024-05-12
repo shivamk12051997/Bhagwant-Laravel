@@ -59,9 +59,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-12" id="get_datatable"></div>
-                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12" id="get_datatable"></div>
                             </div>
                         </div>
                     </div>

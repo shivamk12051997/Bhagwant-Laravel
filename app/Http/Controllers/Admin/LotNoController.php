@@ -100,4 +100,16 @@ class LotNoController extends Controller
 
         return $lot_activity;
     }
+    public function multiple_delete(Request $request)
+    {
+        $input =  $request->all();
+
+        foreach ($request->lot_no_id as $key => $id) {
+            $lot_no = LotNo::find($id);
+            LotNoActivity::where('lot_no_id',$lot_no->id)->delete();
+            $lot_no->delete();
+        }
+
+        return redirect()->back()->with('danger','Lot No Deleted Successfully');
+    }
 }

@@ -54,6 +54,15 @@
       .form-group span{
         color: #FF0000;
       }
+      table th:last-child, table td:last-child
+      {
+        position:sticky !important;
+        right:0px;
+        background-color: #f6f7f9;
+      }
+      .notify-alert{
+        z-index: 99999999999 !important;
+      }
     </style>
     @yield('css')
   </head>

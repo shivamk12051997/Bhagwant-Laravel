@@ -208,7 +208,7 @@
             </div>
             <div class="card-body dark-timeline">
               <div class="dt-ext table-responsive">
-                <table class="table table-striped table-hover">
+                <table class="table table-striped table-hover Datatable nowrap" id="datatable-excel">
                     <thead>
                         <tr>
                           <th>#</th>
@@ -223,6 +223,10 @@
                         </tr>
                     </thead>
                     <tbody>
+                      @php
+                        $total_pcs = 0;
+                        $total_earnings = 0;
+                      @endphp
                       @forelse ($lot_activity as $item)
                         <tr>
                           <td>{{ $loop->index + 1 }}</td>
@@ -235,9 +239,22 @@
                           <td>{{ ($item->date ?? '') == '' ? "N/A" : date('d M,Y',strtotime($item->date)) }}</td>
                           <td>{{ date('d M,Y h:i A',strtotime($item->created_at)) }}</td>
                         </tr>
+                        @php
+                          $total_pcs += $item->pcs ?? 0;
+                          $total_earnings += ($item->pcs ?? 0) * ($item->price ?? 0);
+                        @endphp
                       @endforeach
             
                     </tbody>
+                    <tfoot>
+                      <tr>
+                        <th colspan="3" class="text-end">Total PCS:</th>
+                        <th>{{ $total_pcs ?? 0 }}</th>
+                        <th colspan="3" class="text-end">Total Earnings:</th>
+                        <th>{{ $total_earnings ?? 0 }}</th>
+                        <th></th>
+                      </tr>
+                    </tfoot>
                 </table>
               </div>
             </div>
@@ -260,6 +277,14 @@
 
 @section('script')
 <script>
+  $('#datatable-excel').DataTable({
+        lengthMenu: [
+            [-1]
+        ],
+        dom: "Brt",
+        // buttons: ["excelHtml5", "pdfHtml5"],
+  });
+
   function edit_modal(lot_no_id, lot_activity_id){
       $('#ajax_html').html('<div class="loader-box"><div class="loader-37"></div></div>');
       $.get('{{ url('lot_no/activity') }}',{lot_no_id:lot_no_id, lot_activity_id:lot_activity_id}, function(data){

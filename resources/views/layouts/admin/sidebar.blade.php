@@ -51,6 +51,7 @@
               <li><a href="{{ route('master.size.index') }}">Size</a></li>
               <li><a href="{{ route('master.color.index') }}">Color</a></li>
               <li><a href="{{ route('master.worker.index') }}">Worker Master</a></li>
+              <li><a href="{{ route('master.master_lot.index') }}">Master Lot</a></li>
             </ul>
           </li>
           <li class="sidebar-list">

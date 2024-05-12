@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\MasterLotController;
 use App\Http\Controllers\Admin\LotNoController;
 use App\Http\Controllers\Admin\WebsiteController;
 use App\Http\Controllers\Admin\MasterSizeController;
@@ -27,6 +28,7 @@ Route::post('edit_profile/insert', [HomeController::class, 'edit_profile_insert'
 Route::get('edit_profile/', [HomeController::class, 'edit_profile'])->name('edit_profile');
 Route::get('/get_worker', [AjaxController::class, 'get_worker'])->name('get_worker');
 Route::get('/get_worker_price', [AjaxController::class, 'get_worker_price'])->name('get_worker_price');
+Route::get('/get_master_lot_details', [AjaxController::class, 'get_master_lot_details'])->name('get_master_lot_details');
 
 Auth::routes();
 
@@ -62,6 +64,13 @@ Route::group(['middleware' => ['auth','is_Admin']], function () {
     Route::get('master/worker/edit/{id}', [MasterWorkerController::class, 'edit'])->name('master.worker.edit');
     Route::get('master/worker/delete/{id}', [MasterWorkerController::class, 'delete'])->name('master.worker.delete');
     Route::get('master/worker/status/{id}', [MasterWorkerController::class, 'status'])->name('master.worker.status');
+    // Master Lot
+    Route::get('master/master_lot', [MasterLotController::class, 'index'])->name('master.master_lot.index');
+    Route::get('master/master_lot/datatable', [MasterLotController::class, 'datatable'])->name('master.master_lot.datatable');
+    Route::post('master/master_lot/insert', [MasterLotController::class, 'insert'])->name('master.master_lot.insert');
+    Route::get('master/master_lot/edit/{id}', [MasterLotController::class, 'edit'])->name('master.master_lot.edit');
+    Route::get('master/master_lot/delete/{id}', [MasterLotController::class, 'delete'])->name('master.master_lot.delete');
+    Route::get('master/master_lot/status/{id}', [MasterLotController::class, 'status'])->name('master.master_lot.status');
 });
 
 // ___________________________ Admin & User Route ____________________________
@@ -75,6 +84,7 @@ Route::group(['middleware' => ['auth','is_User']], function () {
    Route::get('lot_no/show/{id}', [LotNoController::class, 'show'])->name('lot_no.show');
    Route::get('lot_no/activity', [LotNoController::class, 'activity'])->name('lot_no.activity');
    Route::post('lot_no/activity_insert', [LotNoController::class, 'activity_insert'])->name('lot_no.activity_insert');
+   Route::post('lot_no/multiple_delete', [LotNoController::class, 'multiple_delete'])->name('lot_no.multiple_delete');
 
    // Worker Salary
    Route::get('worker_salary', [MasterWorkerController::class, 'worker_salary'])->name('worker_salary.index');

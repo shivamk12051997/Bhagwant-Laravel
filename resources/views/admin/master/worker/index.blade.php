@@ -26,7 +26,7 @@
                         <h6>Worker Code/ID <span>*</span></h6>
                         <input type="text" class="form-control" name="worker_code" id="" placeholder="Enter Worker Code/ID"  required>
                     </div>
-                    <div class="col-md-3 form-group mb-3">
+                    <div class="col-md-5 form-group mb-3">
                         <h6>Worker Role <small class="text-muted">(Multiple)</small> <span>*</span></h6>
                         <select class="form-select js-example-basic-multiple" name="role[]" multiple id="" required>
                             <option value="Cutting">Cutting</option>
@@ -40,10 +40,10 @@
                             <option value="Packing">Packing</option>
                         </select>
                     </div>
-                    <div class="col-md-2 form-group mb-3">
+                    {{-- <div class="col-md-2 form-group mb-3">
                         <h6>Price <span>*</span></h6>
                         <input type="number" step="any" class="form-control" name="price" id="" value="{{ $worker->price ?? '' }}" required>
-                    </div>
+                    </div> --}}
                     <div class="col-md-1 form-group pt-2">
                         <button type="submit" class="btn btn-primary">Save</button>
                     </div>
