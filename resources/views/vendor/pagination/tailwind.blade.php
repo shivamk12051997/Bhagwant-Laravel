@@ -95,9 +95,9 @@
                                     @endif
                                     @php $showEllipsis = true; @endphp
                                 @elseif($showEllipsis)
-                                    <span aria-disabled="true">
+                                    {{-- <span aria-disabled="true">
                                         <span class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 cursor-default leading-5">...</span>
-                                    </span>
+                                    </span> --}}
                                     @php $showEllipsis = false; @endphp
                                 @endif
                             @endforeach

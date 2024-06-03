@@ -25,37 +25,39 @@
                                 <div class="row justify-content-between">
                                     <div class="col-sm-12 col-md-6 col-lg-auto">
                                         <div class="dataTables_length" id="datatable_length">
-                                            <label>Show 
-                                                <select name="datatable_length" class="form-select" id="datatable_page_show">
-                                                    <option value="50">50</option>
-                                                    <option value="100">100</option>
-                                                    <option value="150">150</option>
-                                                    <option value="200">200</option>
-                                                    <option value="300  ">300</option>
-                                                </select> entries
-                                            </label>
+                                            <select name="datatable_length" id="datatable_page_show">
+                                                <option value="50">50 entries</option>
+                                                <option value="100">100 entries</option>
+                                                <option value="150">150 entries</option>
+                                                <option value="200">200 entries</option>
+                                                <option value="300">300 entries</option>
+                                            </select> 
                                         </div>
                                     </div>
                                     <div class="col-sm-12 col-md-6 col-lg-auto">
+                                        <input type="number" name="lot_no_from" class="form-control form-control-sm" id="lot_no_from" placeholder="From...">
+                                    </div>
+                                    <div class="col-sm-12 col-md-6 col-lg-auto">
+                                        <input type="number" name="lot_no_to" class="form-control form-control-sm" id="lot_no_to" placeholder="To...">
+                                    </div>
+                                    <div class="col-sm-12 col-md-6 col-lg-auto">
                                         <div class="dataTables_length" id="datatable_length">
-                                            <label>Work Role (Status): 
-                                                <select name="status" class="form-select" id="status">
-                                                    <option value="All">All</option>
-                                                    <option value="Cutting" {{ (request()->status ?? '') == 'Cutting' ? 'selected':'' }}>Cutting</option>
-                                                    <option value="Printing/Embroidery" {{ (request()->status ?? '') == 'Printing/Embroidery' ? 'selected':'' }}>Printing/Embroidery</option>
-                                                    <option value="Sewing Machine" {{ (request()->status ?? '') == 'Sewing Machine' ? 'selected':'' }}>Sewing Machine</option>
-                                                    <option value="Overlock" {{ (request()->status ?? '') == 'Overlock' ? 'selected':'' }}>Overlock</option>
-                                                    <option value="Kaj Button" {{ (request()->status ?? '') == 'Kaj Button' ? 'selected':'' }}>Kaj Button</option>
-                                                    <option value="Thread Cutting" {{ (request()->status ?? '') == 'Thread Cutting' ? 'selected':'' }}>Thread Cutting</option>
-                                                    <option value="Press" {{ (request()->status ?? '') == 'Press' ? 'selected':'' }}>Press</option>
-                                                    <option value="Packing" {{ (request()->status ?? '') == 'Packing' ? 'selected':'' }}>Packing</option>
-                                                </select>
-                                            </label>
+                                            <select name="status"  id="status">
+                                                <option value="All">All Work Role (Status)</option>
+                                                <option value="Cutting" {{ (request()->status ?? '') == 'Cutting' ? 'selected':'' }}>Cutting</option>
+                                                <option value="Printing/Embroidery" {{ (request()->status ?? '') == 'Printing/Embroidery' ? 'selected':'' }}>Printing/Embroidery</option>
+                                                <option value="Sewing Machine" {{ (request()->status ?? '') == 'Sewing Machine' ? 'selected':'' }}>Sewing Machine</option>
+                                                <option value="Overlock" {{ (request()->status ?? '') == 'Overlock' ? 'selected':'' }}>Overlock</option>
+                                                <option value="Kaj Button" {{ (request()->status ?? '') == 'Kaj Button' ? 'selected':'' }}>Kaj Button</option>
+                                                <option value="Thread Cutting" {{ (request()->status ?? '') == 'Thread Cutting' ? 'selected':'' }}>Thread Cutting</option>
+                                                <option value="Press" {{ (request()->status ?? '') == 'Press' ? 'selected':'' }}>Press</option>
+                                                <option value="Packing" {{ (request()->status ?? '') == 'Packing' ? 'selected':'' }}>Packing</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-sm-12 col-md-6 col-lg-auto">
                                         <div id="datatable_filter" class="dataTables_filter">
-                                            <label>Search:<input type="search" id="datatable_search" class="form-control form-control-sm" placeholder="" aria-controls="datatable"></label>
+                                            <input type="search" id="datatable_search" class="form-control form-control-sm" placeholder="Search..." aria-controls="datatable">
                                         </div>
                                     </div>
                                 </div>
@@ -84,7 +86,7 @@
         $(document).ready(function(){
             get_datatable();
         });
-        $('#datatable_wrapper').on('change keyup' ,function(){
+        $('#datatable_wrapper').on('input' ,function(){
             get_datatable();
         });
         $(document).on('click','.pages a',function(n){
@@ -98,7 +100,9 @@
             var search = $('#datatable_search').val();
             var status = $('#status').val();
             var page = page ?? 1;
-            $.get('{{ route("lot_no.datatable") }}?page='+page+'&value='+value+'&search='+search+'', { _token: "{{csrf_token() }}",status:status}, function(data){
+            var lot_no_from = $('#lot_no_from').val();
+            var lot_no_to = $('#lot_no_to').val();
+            $.get('{{ route("lot_no.datatable") }}?page='+page+'&value='+value+'&search='+search+'', { _token: "{{csrf_token() }}",status:status, lot_no_from:lot_no_from, lot_no_to:lot_no_to}, function(data){
                 $('#get_datatable').html(data);
                 feather.replace();
             });

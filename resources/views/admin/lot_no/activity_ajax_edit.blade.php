@@ -25,6 +25,9 @@
                     elseif(($lot_no->status ?? '') == 'Printing/Embroidery'){
                         $action = 'Sewing Machine';
                     }
+                    elseif(($lot_no->status ?? '') == 'Send To Party'){
+                        $action = 'Received From Party';
+                    }
                     elseif(($lot_no->status ?? '') == 'Sewing Machine'){
                         $action = 'Overlock';
                     }
@@ -45,7 +48,7 @@
                 <input type="text" class="form-control" name="action" id="action" value="{{ $action ?? '' }}" readonly required>
             </div>
             <div class="col-md-12 form-group">
-                @if (($action ?? '') == 'Printing/Embroidery' && ($lot_activity->id ?? 0)  == 0)
+                @if (($action ?? '') == 'Printing/Embroidery' || ($action ?? '') == 'Send To Party' || ($lot_no->status ?? '') == 'Cutting')
                     <div class="form-check-size rtl-input" onchange="action_change()">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input me-2" id="embroidery" type="radio" name="action_change" value="Printing/Embroidery" checked="">
@@ -73,6 +76,12 @@
                         </div>
                     </div>
                 @endif
+                @if(($action ?? '') == 'Received From Party')
+                    <div class="form-group mb-3">
+                        <h6>Party Name <span>*</span></h6>
+                        <input type="text" class="form-control" name="party_name" id="" value="{{ $lot_no->last_activity->party_name ?? '' }}" readonly>
+                    </div>
+                @endif
                 @if (($action ?? '') == 'Overlock' || ($action ?? '') == 'Linking')
                 <div class="form-check-size rtl-input" onchange="action_change()">
                     <div class="form-check form-check-inline">
@@ -98,9 +107,9 @@
                 </div>
                 @endif
             </div>
-            <div class="col-md-12 form-group mb-3" id="in_source_box" style="display: {{ ($action ?? '') == 'Printing/Embroidery' ? ($lot_activity->embroidery_action ?? '') == 'Out Source' ? 'none':'block':'' }}">
+            <div class="col-md-12 form-group mb-3" id="in_source_box" style="display: {{ ($action ?? '') == 'Send To Party' || ($action ?? '') == 'Received From Party' ? 'none':'block' }}">
                 <h6><span class="text-dark" id="action_text">{{ ($action ?? '') }}</span> Master <span>*</span></h6>
-                <select class="form-select js-example-basic-single" name="worker_id" id="worker_id" {{ ($action ?? '') == 'Printing/Embroidery' ? ($lot_activity->embroidery_action ?? '') == 'Out Source' ? '':'required':'required' }}>
+                <select class="form-select js-example-basic-single" name="worker_id" id="worker_id" {{ ($action ?? '') == 'Send To Party' || ($action ?? '') == 'Received From Party' ? '':'required' }}>
                     <option value="" selected disabled>Select Option...</option>
                     @foreach (App\Models\Worker::whereJsonContains('role',($action ?? ''))->where('status',1)->latest()->get() as $worker)
                     <option value="{{ $worker->id }}" {{ ($lot_activity->worker_id ?? '') == $worker->id ? 'selected':'' }}>{{ $worker->name }}</option>
@@ -108,8 +117,8 @@
                 </select>
             </div>
             <div class="col-md-6 form-group mb-3">
-                <h6> <span class="text-dark" id="price_text">Per Price</span> <span>*</span></h6>
-                <input type="number" step="any" class="form-control" name="price" id="price" value="{{ $lot_activity->price ?? '' }}" required>
+                <h6> <span class="text-dark" id="price_text">{{ ($action ?? '') == 'Send To Party' ? 'Total Cost':'Per Price' }}</span> <span>*</span></h6>
+                <input type="number" step="any" class="form-control" name="price" id="price" value="{{ $lot_activity->price ?? 0 }}" required>
             </div>
             <div class="col-md-6 form-group mb-3">
                 <h6>Date <span>*</span></h6>
@@ -155,11 +164,13 @@
             $('#in_source_box').hide(300);
             $('#price_text').text('Total Cost');
             $('#worker_id').attr('required',false);
+            $('#action').val('Send To Party');
         }else{
             $('#out_source_box').hide(300);
             $('#in_source_box').show(300);
             $('#price_text').text('Per Price');
             $('#worker_id').attr('required',true);
+            $('#action').val('Printing/Embroidery');
         }
     }
     function action_change(){

@@ -21,6 +21,15 @@ class LotNoController extends Controller
             $numbers = $request->value;
         }
         $lot_no = LotNo::orderBy('id','desc');
+        if(($request->status ?? '') != 'All'){
+            $lot_no = $lot_no->where('status', $request->status);
+        }
+        if(($request->lot_no_from ?? '') != ''){
+            $lot_no = $lot_no->where('lot_no', '>=', $request->lot_no_from);
+        }
+        if(($request->lot_no_to ?? '') != ''){
+            $lot_no = $lot_no->where('lot_no', '<=', $request->lot_no_to);
+        }
         if($request->search){
             $allColumnNames = Schema::getColumnListing((new LotNo)->getTable());
             $columnNames = array_filter($allColumnNames, fn($columnName) => !in_array($columnName, ['created_at', 'updated_at', 'id']));
@@ -31,9 +40,7 @@ class LotNoController extends Controller
                 }
             });
         }
-        if(($request->status ?? '') != 'All'){
-            $lot_no = $lot_no->where('status', $request->status);
-        }
+       
         $lot_no = $lot_no->orderBy('id','desc')->paginate($numbers);
         // $lot_no = LotNo::where('deleted_at', null)->latest()->get();
         return view('admin.lot_no.datatable', compact('lot_no'));
@@ -93,7 +100,7 @@ class LotNoController extends Controller
         }
         $lot_no = LotNo::find($request->lot_no_id);
         $lot_no->status = $request->action;
-        $lot_no->is_complete = $request->action == 'Packing' ? 1 : 0;
+        $lot_no->is_complete = $request->action == 'Packing' || $request->action == 'Received From Party' ? 1 : 0;
         $lot_no->save();
         $input['pcs'] = $lot_no->pcs;
         $lot_activity = LotNoActivity::updateOrCreate(['id' => $input['id']],$input);

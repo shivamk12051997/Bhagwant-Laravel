@@ -54,6 +54,9 @@
       .form-group span{
         color: #FF0000;
       }
+      div.dataTables_wrapper div.dataTables_length select{
+        width: auto;
+      }
       table th:last-child, table td:last-child
       {
         position:sticky !important;
