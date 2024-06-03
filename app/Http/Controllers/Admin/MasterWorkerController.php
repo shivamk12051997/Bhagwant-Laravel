@@ -94,6 +94,6 @@ class MasterWorkerController extends Controller
     {
         $worker = Worker::find($worker_id);
         $lot_activity = LotNoActivity::whereDate('date','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('date','<=',($request->to_date ?? date('Y-m-d')))->where('worker_id',$worker_id)->orderBy('id','desc')->get();
-        return view('admin.worker_salary.show', compact('worker','lot_activity'));
+        return view('admin.worker_salary.show', compact('worker','lot_activity','request'));
     }
 }

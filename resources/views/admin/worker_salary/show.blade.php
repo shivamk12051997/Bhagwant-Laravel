@@ -248,10 +248,14 @@
                     </tbody>
                     <tfoot>
                       <tr>
-                        <th colspan="3" class="text-end">Total PCS:</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th class="text-end">Total PCS:</th>
                         <th>{{ $total_pcs ?? 0 }}</th>
-                        <th colspan="3" class="text-end">Total Earnings:</th>
+                        <th class="text-end">Total Earnings:</th>
                         <th>{{ $total_earnings ?? 0 }}</th>
+                        <th></th>
                         <th></th>
                       </tr>
                     </tfoot>
@@ -265,7 +269,7 @@
   </div>
 
 
-<div class="modal fade" id="edit_modal" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<div class="modal fade" id="edit_modal" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content" id="ajax_html">
         
@@ -277,12 +281,31 @@
 
 @section('script')
 <script>
-  $('#datatable-excel').DataTable({
-        lengthMenu: [
-            [-1]
-        ],
-        dom: "Brt",
-        // buttons: ["excelHtml5", "pdfHtml5"],
+  $(document).ready(function() {
+    var title = "{{ ($worker->name ?? 'N/A') .' - '.date('d M, Y', strtotime($request->from_date)). ' - '.date('d M, Y', strtotime($request->to_date)) }}";
+
+    $('#datatable-excel').DataTable({
+      lengthMenu: [
+        [-1]
+      ],
+      dom: "Brt",
+      ordering: false,
+      buttons: [
+        'copy',
+        'excelHtml5',
+        'csvHtml5',
+        {
+          extend: 'pdfHtml5',
+          title: title,
+          footer: true, // Include the footer
+        },
+        {
+          extend: 'print',
+          title: title,
+          footer: true, // Include the footer
+        }
+      ],
+    });
   });
 
   function edit_modal(lot_no_id, lot_activity_id){

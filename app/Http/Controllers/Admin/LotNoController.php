@@ -97,7 +97,7 @@ class LotNoController extends Controller
         $lot_no->save();
         $input['pcs'] = $lot_no->pcs;
         $lot_activity = LotNoActivity::updateOrCreate(['id' => $input['id']],$input);
-
+        
         return $lot_activity;
     }
     public function multiple_delete(Request $request)

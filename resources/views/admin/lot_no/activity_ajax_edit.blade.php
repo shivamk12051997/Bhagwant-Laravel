@@ -34,10 +34,10 @@
                     elseif(($lot_no->status ?? '') == 'Kaj Button'){
                         $action = 'Thread Cutting';
                     }
-                    elseif(($lot_no->status ?? '') == 'Thread Cutting' && ($lot_no->press ?? '') == 'Yes'){
+                    elseif(($lot_no->status ?? '') == 'Thread Cutting' && ($lot_no->press ?? 'No') == 'Yes'){
                         $action = 'Press';
                     }
-                    elseif(($lot_no->status ?? '') == 'Press' || ($lot_no->press ?? '') == 'No'){
+                    elseif(($lot_no->status ?? '') == 'Press' || ($lot_no->press ?? 'No') == 'No'){
                         $action = 'Packing';
                     }
                 }
