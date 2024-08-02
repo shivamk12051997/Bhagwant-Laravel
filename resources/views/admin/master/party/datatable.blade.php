@@ -3,43 +3,25 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Lot Range</th>
-                <th>Show Gender</th>
-                <th>Show Press</th>
-                <th>Sizes</th>
-                <th>Cutting Price</th>
-                <th>Printing/Embroidery Price</th>
-                <th>Sewing Machine Price</th>
-                <th>Overlock Price</th>
-                <th>Linking Price</th>
-                <th>Kaj Button Price</th>
-                <th>Thread Cutting Price</th>
-                <th>Press Price</th>
-                <th>Packing Price</th>
+                <th>Name</th>
+                <th>Phone Number</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Created At</th>
                 <th>Options</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($master_lot as $key => $item)
+            @foreach ($party as $key => $item)
             <tr>
                 <td>{{ $key+1 }}</td>
-                <td>{{ $item->from ?? 'N/A' }} - {{ $item->to ?? 'N/A' }}</td>
-                <td>{{ $item->show_gender ?? 'N/A' }}</td>
-                <td>{{ $item->show_press ?? 'N/A' }}</td>
+                <td>{{ $item->name ?? 'N/A' }}</td>
+                <td>{{ $item->phone ?? 'N/A' }}</td>
+                <td>{{ $item->price ?? 'N/A' }}</td>
                 <td>
-                    @foreach (App\Models\Size::whereIn('id', (json_decode($item->size_ids ?? '[]') ?? []))->get() as $size)
-                        <span class="badge badge-primary ">{{ $size->name }}</span>
-                    @endforeach
+                    <span class="badge badge-{{ $item->status == '1' ? 'success':'danger' }} pointer" id="status_{{ $item->id }}" onclick="change_status({{ $item->id }})">{{ $item->status == '1' ? 'Active':'Inactive' }}</span>
                 </td>
-                <td>{{ $item->cutting_price ?? 'N/A' }}</td>
-                <td>{{ $item->printing_price ?? 'N/A' }}</td>
-                <td>{{ $item->sewing_machine_price ?? 'N/A' }}</td>
-                <td>{{ $item->overlock_price ?? 'N/A' }}</td>
-                <td>{{ $item->linking_price ?? 'N/A' }}</td>
-                <td>{{ $item->kaj_button_price ?? 'N/A' }}</td>
-                <td>{{ $item->thread_cutting_price ?? 'N/A' }}</td>
-                <td>{{ $item->press_price ?? 'N/A' }}</td>
-                <td>{{ $item->packing_price ?? 'N/A' }}</td>
+                <td>{{ date('d M,Y h:i A',strtotime($item->created_at)) }}</td>
                 <td>
                     <a href="#" class="text-warning p-1 f-22" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $item->id }})" data-toggle="tooltip" title="Edit">
                         <i class="fa fa-edit"></i>
@@ -59,7 +41,7 @@
                             })
                             .then((willDelete) => {
                                 if (willDelete) {
-                                    window.location.href = "{{ route('master.master_lot.delete',$item->id)}}";
+                                    window.location.href = "{{ route('master.party.delete',$item->id)}}";
                                 }
                             })
                         });

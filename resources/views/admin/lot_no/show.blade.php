@@ -173,8 +173,8 @@
               <div class="card-body">
                 <div class="text-center">
                   <h5>{{ $lot_no->lot_no ?? 'N/A' }}</h5>
-                  @if (($lot_no->is_complete ?? '') == '1')
-                    <span class="badge badge-success">{{ $lot_no->status ?? 'N/A' }}</span>
+                  @if (($lot_no->is_complete ?? '') == '1' || ($lot_no->status ?? '') == 'Send To Party')
+                    <span class="badge badge-{{ ($lot_no->is_complete ?? '') == 1 ? 'success':'primary' }}">{{ $lot_no->status ?? 'N/A' }}</span>
                   @else
                     <span class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $lot_no->id }}, 0)">{{ $lot_no->status ?? 'N/A' }}</span>
                   @endif
@@ -204,18 +204,42 @@
                   <li class="d-flex">
                       <div class="timeline-dot-secondary"></div>
                       <div class="w-100 ms-3">
-                        <h6 class="mb-1">{{ $item->action ?? 'N/A' }} <small>({{ $item->worker->name ?? $item->party_name ?? 'N/A' }})</small>
+                        <h6 class="mb-1">{{ $item->action ?? 'N/A' }} <small>({{ $item->worker->name ?? $item->party->name ?? 'N/A' }})</small>
+                          @if (($item->action ?? '') != 'Send To Party' && ($item->action ?? '') != 'Received From Party')
                           <a href="javascript::void({{ $item->id }})" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $lot_no->id }}, {{ $item->id }})" class="text-warning p-1 f-18" data-toggle="tooltip" title="Edit">
                             <i class="fa fa-edit"></i>
                           </a>
+                          @endif
+                          @if (auth()->user()->role_as == 'Admin')
+                          <a id="Delete-{{$item->id}}" class="text-danger pointer p-1 f-18" data-toggle="tooltip" title="Delete">
+                              <i class="fa fa-trash-o"></i>
+                          </a>
+                          <script>
+                              $('#Delete-{{$item->id}}').click(function(){
+                                  swal({
+                                      title: "Are you sure?",
+                                      text: "You won't be able to revert this!",
+                                      icon: "warning",
+                                      buttons: true,
+                                      dangerMode: true,
+                                  })
+                                  .then((willDelete) => {
+                                      if (willDelete) {
+                                          window.location.href = "{{ route('lot_no.activity.delete',$item->id)}}";
+                                      }
+                                  })
+                              });
+                          </script>
+                          @endif
                         </h6>
                         <p class="d-flex justify-content-between mb-2">
                           <span class="date-content light-background">
                             Rs.{{ $item->price ?? 'N/A' }}
-                            @if (($item->action ?? '') == 'Printing/Embroidery')
-                              / {{ $item->embroidery_action ?? 'N/A' }}
+                            @if (($item->embroidery_action ?? '') == 'Out Source')
+                            / {{ $item->embroidery_action ?? '' }} / PCs: {{ $item->pcs ?? 'N/A' }}
                             @endif
                           </span>
+                          <span><b>Date:</b> {{ date('d M,Y',strtotime($item->date)) }}</span>
                           <span>{{ date('d M,Y h:i a',strtotime($item->created_at)) }} By {{ $item->created_by->name ?? 'N/A' }}</span>
                         </p>
                         

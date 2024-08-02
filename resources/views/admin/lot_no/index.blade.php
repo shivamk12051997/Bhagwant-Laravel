@@ -16,7 +16,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header d-flex">
-                        <h4 class="card-title">All Lot No</h4>
+                        <h4 class="card-title">{{ request()->page_name ?? 'All' }} Lot No</h4>
                         <a href="#" class="btn btn-primary ms-auto col-auto" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal(0)">Add Lot No.</a>
                     </div>
                     <div class="card-body">
@@ -102,7 +102,8 @@
             var page = page ?? 1;
             var lot_no_from = $('#lot_no_from').val();
             var lot_no_to = $('#lot_no_to').val();
-            $.get('{{ route("lot_no.datatable") }}?page='+page+'&value='+value+'&search='+search+'', { _token: "{{csrf_token() }}",status:status, lot_no_from:lot_no_from, lot_no_to:lot_no_to}, function(data){
+            var page_name = '{{ request()->page_name ?? 'All' }}';
+            $.get('{{ route("lot_no.datatable") }}?page='+page+'&value='+value+'&search='+search+'', { _token: "{{csrf_token() }}",status:status, lot_no_from:lot_no_from, lot_no_to:lot_no_to, page_name:page_name}, function(data){
                 $('#get_datatable').html(data);
                 feather.replace();
             });
@@ -123,19 +124,27 @@
                 $.post('{{ route('lot_no.insert') }}', form_data, function(data){
                     if(data != 0){
                         $.notify({ title:'Success', message:'Lot No Saved Successfully' }, { type:'success', });
-                        get_datatable();
+                        var current_page = $('span[aria-current="page"] span').text();
+                        get_datatable(current_page);
                         $('#edit_modal').modal('hide');
                         $('input.form-control').val('');
                     }else{
                         $('#error_box').show(200);
                         $('#lot_no').addClass('is-invalid');
+                        $('button[type="submit"]').removeClass('disabled',false);
+                        $('button[type="submit"]').text('Save');
                     }
                 });
             }
             if(form_name == 'Lot Activity'){
                 $.post('{{ route('lot_no.activity_insert') }}', form_data, function(data){
                     $.notify({ title:'Success', message:'Lot Activity Saved Successfully' }, { type:'success', });
-                    get_datatable();
+                    var lot_no_id = $('#lot_no_id').val();
+                    if(data.action == 'Packing' || data.action == 'Received From Party'){
+                        $('#lot_no_id_tr'+lot_no_id+' .status').html('<span class="badge badge-success">'+data.action+'</span>');
+                    }else{
+                        $('#lot_no_id_tr'+lot_no_id+' .status').html('<span class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_lot_activity_modal('+data.lot_no_id+', 0)">'+data.action+'</span>');
+                    }
                     $('#edit_modal').modal('hide');
                     $('input.form-control').val('');
                 }); 

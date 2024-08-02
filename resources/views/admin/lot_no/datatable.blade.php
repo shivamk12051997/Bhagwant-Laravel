@@ -1,9 +1,8 @@
-<form action="{{ route('lot_no.multiple_delete') }}" method="POST" class="dt-ext table-responsive">
-    @csrf
+<div class="dt-ext table-responsive">
     <table class="table table-striped table-hover">
         <thead>
             <tr>
-                <th>#</th>
+                <th># <input type="checkbox" class="form-check-input" id="select_all" onchange="check_all()"></th>
                 <th>Lot No.</th>
                 <th>Color</th>
                 <th>Size</th>
@@ -17,15 +16,15 @@
         </thead>
         <tbody>
             @foreach ($lot_no as $key => $item)
-            <tr>
+            <tr id="lot_no_id_tr{{ $item->id }}">
                 <td>{{ $lot_no->firstItem() + $loop->index }} <input type="checkbox" class="form-check-input" name="lot_no_id[]" value="{{ $item->id }}" id=""></td>
                 <td>{{ $item->lot_no ?? 'N/A' }}</td>
                 <td>{{ $item->color->name ?? 'N/A' }}</td>
                 <td>{{ $item->size->name ?? 'N/A' }}</td>
                 <td>{{ $item->pcs ?? 'N/A' }}</td>
-                <td>
-                    @if (($item->is_complete ?? '') == '1')
-                    <span class="badge badge-success">{{ $item->status ?? 'N/A' }}</span>
+                <td class="status">
+                    @if (($item->is_complete ?? '') == '1' || ($item->status ?? '') == 'Send To Party')
+                    <span class="badge badge-{{ ($item->is_complete ?? '') == 1 ? 'success':'primary' }}">{{ $item->status ?? 'N/A' }}</span>
                     @else
                     <span class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_lot_activity_modal({{ $item->id }}, 0)">{{ $item->status ?? 'N/A' }}</span>
                     @endif
@@ -66,10 +65,61 @@
             @endforeach
         </tbody>
     </table>
-    <input type="submit" value="Delete Selected" class="btn btn-danger btn-sm" name="submit" id="submit" onclick="return confirm('Are you sure?')">
-</form>
+    <button type="button" class="btn btn-danger btn-sm" onclick="delete_lots()">Delete Selected</button>
+    <button type="button" class="btn btn-primary btn-sm" onclick="challan_out_lots()" data-bs-toggle="modal" data-bs-target="#edit_modal" >Challan Out Selected</button>
+    <button type="button" class="btn btn-primary btn-sm" onclick="challan_in_lots()" data-bs-toggle="modal" data-bs-target="#edit_modal" >Challan In Selected</button>
+</div>
 
 <div>
     {{$lot_no->links()}}
 </div>
 
+<script>
+    function challan_out_lots(){
+        var lot_no_id = $('input[name="lot_no_id[]"]:checkbox:checked').map(function() { return $(this).val(); }).get();
+        var in_out = 'Out';
+        var id = 0;
+        $('#ajax_html').html('<div class="loader-box"><div class="loader-37"></div></div>');
+        $.get('{{ url('challan/edit') }}/'+id, { in_out:in_out, lot_no_id:lot_no_id }, function(data){
+            $('#ajax_html').removeClass();
+            $('#ajax_html').addClass('modal-dialog modal-lg');
+            $('#ajax_html').html(data);
+        });
+    }
+    function challan_in_lots(){
+        var lot_no_id = $('input[name="lot_no_id[]"]:checkbox:checked').map(function() { return $(this).val(); }).get();
+        var in_out = 'In';
+        var id = 0;
+        $('#ajax_html').html('<div class="loader-box"><div class="loader-37"></div></div>');
+        $.get('{{ url('challan/edit') }}/'+id, { in_out:in_out, lot_no_id:lot_no_id }, function(data){
+            $('#ajax_html').removeClass();
+            $('#ajax_html').addClass('modal-dialog modal-xl');
+            $('#ajax_html').html(data);
+        });
+    }
+    function delete_lots(){
+        swal({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                var lot_no_id = $('input[name="lot_no_id[]"]:checkbox:checked').map(function() { return $(this).val(); }).get();
+                $.post('{{ route('lot_no.multiple_delete') }}',{lot_no_id:lot_no_id, _token: "{{ csrf_token() }}"}, function(data){
+                    get_datatable();
+                });
+            }
+        })
+    }
+
+    function check_all(){
+        if($('#select_all').is(':checked')){
+            $('.form-check-input').prop('checked',true);
+        }else{
+            $('.form-check-input').prop('checked',false);
+        }
+    }
+</script>

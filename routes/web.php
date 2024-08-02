@@ -4,12 +4,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ErrorController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Admin\MasterLotController;
 use App\Http\Controllers\Admin\LotNoController;
+use App\Http\Controllers\Admin\ChallanController;
 use App\Http\Controllers\Admin\WebsiteController;
+use App\Http\Controllers\Admin\MasterLotController;
 use App\Http\Controllers\Admin\MasterSizeController;
 use App\Http\Controllers\Admin\MasterColorController;
+use App\Http\Controllers\Admin\MasterPartyController;
 use App\Http\Controllers\Admin\MasterWorkerController;
 
 /*
@@ -29,6 +32,9 @@ Route::get('edit_profile/', [HomeController::class, 'edit_profile'])->name('edit
 Route::get('/get_worker', [AjaxController::class, 'get_worker'])->name('get_worker');
 Route::get('/get_worker_price', [AjaxController::class, 'get_worker_price'])->name('get_worker_price');
 Route::get('/get_master_lot_details', [AjaxController::class, 'get_master_lot_details'])->name('get_master_lot_details');
+Route::get('/get_party_details', [AjaxController::class, 'get_party_details'])->name('get_party_details');
+Route::get('/get_all_lot_no_total_pcs', [AjaxController::class, 'get_all_lot_no_total_pcs'])->name('get_all_lot_no_total_pcs');
+Route::get('/get_all_lot_no_pcs', [AjaxController::class, 'get_all_lot_no_pcs'])->name('get_all_lot_no_pcs');
 
 Auth::routes();
 
@@ -71,23 +77,45 @@ Route::group(['middleware' => ['auth','is_Admin']], function () {
     Route::get('master/master_lot/edit/{id}', [MasterLotController::class, 'edit'])->name('master.master_lot.edit');
     Route::get('master/master_lot/delete/{id}', [MasterLotController::class, 'delete'])->name('master.master_lot.delete');
     Route::get('master/master_lot/status/{id}', [MasterLotController::class, 'status'])->name('master.master_lot.status');
+    // Party
+    Route::get('master/party', [MasterPartyController::class, 'index'])->name('master.party.index');
+    Route::get('master/party/datatable', [MasterPartyController::class, 'datatable'])->name('master.party.datatable');
+    Route::post('master/party/insert', [MasterPartyController::class, 'insert'])->name('master.party.insert');
+    Route::get('master/party/edit/{id}', [MasterPartyController::class, 'edit'])->name('master.party.edit');
+    Route::get('master/party/delete/{id}', [MasterPartyController::class, 'delete'])->name('master.party.delete');
+    Route::get('master/party/status/{id}', [MasterPartyController::class, 'status'])->name('master.party.status');
 });
 
 // ___________________________ Admin & User Route ____________________________
 Route::group(['middleware' => ['auth','is_User']], function () {
-   // LotNo
-   Route::get('lot_no', [LotNoController::class, 'index'])->name('lot_no.index');
-   Route::get('lot_no/datatable', [LotNoController::class, 'datatable'])->name('lot_no.datatable');
-   Route::post('lot_no/insert', [LotNoController::class, 'insert'])->name('lot_no.insert');
-   Route::get('lot_no/edit/{id}', [LotNoController::class, 'edit'])->name('lot_no.edit');
-   Route::get('lot_no/delete/{id}', [LotNoController::class, 'delete'])->name('lot_no.delete');
-   Route::get('lot_no/show/{id}', [LotNoController::class, 'show'])->name('lot_no.show');
-   Route::get('lot_no/activity', [LotNoController::class, 'activity'])->name('lot_no.activity');
-   Route::post('lot_no/activity_insert', [LotNoController::class, 'activity_insert'])->name('lot_no.activity_insert');
-   Route::post('lot_no/multiple_delete', [LotNoController::class, 'multiple_delete'])->name('lot_no.multiple_delete');
+    // LotNo
+    Route::get('lot_no', [LotNoController::class, 'index'])->name('lot_no.index');
+    Route::get('lot_no/datatable', [LotNoController::class, 'datatable'])->name('lot_no.datatable');
+    Route::post('lot_no/insert', [LotNoController::class, 'insert'])->name('lot_no.insert');
+    Route::get('lot_no/edit/{id}', [LotNoController::class, 'edit'])->name('lot_no.edit');
+    Route::get('lot_no/delete/{id}', [LotNoController::class, 'delete'])->name('lot_no.delete');
+    Route::get('lot_no/show/{id}', [LotNoController::class, 'show'])->name('lot_no.show');
+    Route::get('lot_no/activity', [LotNoController::class, 'activity'])->name('lot_no.activity');
+    Route::get('lot_no/activity/delete/{id}', [LotNoController::class, 'activity_delete'])->name('lot_no.activity.delete');
+    Route::post('lot_no/activity_insert', [LotNoController::class, 'activity_insert'])->name('lot_no.activity_insert');
+    Route::post('lot_no/multiple_delete', [LotNoController::class, 'multiple_delete'])->name('lot_no.multiple_delete');
 
-   // Worker Salary
-   Route::get('worker_salary', [MasterWorkerController::class, 'worker_salary'])->name('worker_salary.index');
-   Route::get('worker_salary/datatable', [MasterWorkerController::class, 'worker_salary_datatable'])->name('worker_salary.datatable');
-   Route::get('worker_salary/show/{worker_id}', [MasterWorkerController::class, 'worker_salary_show'])->name('worker_salary.show');
+    //  Challan No.
+    Route::get('challan', [ChallanController::class, 'index'])->name('challan.index');
+    Route::get('challan/datatable', [ChallanController::class, 'datatable'])->name('challan.datatable');
+    Route::post('challan/insert', [ChallanController::class, 'insert'])->name('challan.insert');
+    Route::post('challan_in/insert', [ChallanController::class, 'challan_in_insert'])->name('challan_in.insert');
+    Route::get('challan/edit/{id}', [ChallanController::class, 'edit'])->name('challan.edit');
+    Route::get('challan/delete/{id}', [ChallanController::class, 'delete'])->name('challan.delete');
+    Route::get('challan/in/{id}', [ChallanController::class, 'challan_in'])->name('challan.in');
+
+    // Worker Salary
+    Route::get('worker_salary', [MasterWorkerController::class, 'worker_salary'])->name('worker_salary.index');
+    Route::get('worker_salary/datatable', [MasterWorkerController::class, 'worker_salary_datatable'])->name('worker_salary.datatable');
+    Route::get('worker_salary/show/{worker_id}', [MasterWorkerController::class, 'worker_salary_show'])->name('worker_salary.show');
+    Route::post('worker_salary/lot_activity/is_paid', [MasterWorkerController::class, 'lot_activity_is_paid'])->name('worker_salary.lot_activity.is_paid');
 });
+
+// Error Route
+Route::get('calculate_total_earning_in_lot_activity_table', [ErrorController::class, 'calculate_total_earning_in_lot_activity_table']);
+Route::get('auth_login', [ErrorController::class, 'auth_login']);

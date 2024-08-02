@@ -93,7 +93,18 @@ class MasterWorkerController extends Controller
     public function worker_salary_show(Request $request, $worker_id)
     {
         $worker = Worker::find($worker_id);
-        $lot_activity = LotNoActivity::whereDate('date','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('date','<=',($request->to_date ?? date('Y-m-d')))->where('worker_id',$worker_id)->orderBy('id','desc')->get();
+        $lot_activity = LotNoActivity::whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->where('worker_id',$worker_id)->orderBy('id','desc')->get();
+
         return view('admin.worker_salary.show', compact('worker','lot_activity','request'));
+    }
+    public function lot_activity_is_paid(Request $request)
+    {
+        if(($request->is_paid ?? '') != ''){
+            foreach (LotNoActivity::whereIn('id',$request->lot_no_activity_id)->get() as $key => $item) {
+                $item->is_paid = $request->is_paid;
+                $item->save();
+            }
+        }
+        return redirect()->back()->with('success','Is Paid Updated Successfully');
     }
 }

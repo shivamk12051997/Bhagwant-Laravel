@@ -19,28 +19,29 @@
                 if(($lot_activity->action ?? '') != ''){
                     $action = $lot_activity->action;
                 }else{
-                    if(($lot_no->status ?? '') == 'Cutting'){
+                    $current_status = $lot_no->last_activity->action ?? '';
+                    if(($current_status ?? '') == 'Cutting'){
                         $action = 'Printing/Embroidery';
                     }
-                    elseif(($lot_no->status ?? '') == 'Printing/Embroidery'){
+                    elseif(($current_status ?? '') == 'Printing/Embroidery'){
                         $action = 'Sewing Machine';
                     }
-                    elseif(($lot_no->status ?? '') == 'Send To Party'){
+                    elseif(($current_status ?? '') == 'Send To Party'){
                         $action = 'Received From Party';
                     }
-                    elseif(($lot_no->status ?? '') == 'Sewing Machine'){
+                    elseif(($current_status ?? '') == 'Sewing Machine'){
                         $action = 'Overlock';
                     }
-                    elseif(($lot_no->status ?? '') == 'Overlock' || ($lot_no->status ?? '') == 'Linking'){
+                    elseif(($current_status ?? '') == 'Overlock' || ($current_status ?? '') == 'Linking'){
                         $action = 'Kaj Button';
                     }
-                    elseif(($lot_no->status ?? '') == 'Kaj Button'){
+                    elseif(($current_status ?? '') == 'Kaj Button'){
                         $action = 'Thread Cutting';
                     }
-                    elseif(($lot_no->status ?? '') == 'Thread Cutting' && ($lot_no->press ?? 'No') == 'Yes'){
+                    elseif(($current_status ?? '') == 'Thread Cutting' && ($lot_no->press ?? 'No') == 'Yes'){
                         $action = 'Press';
                     }
-                    elseif(($lot_no->status ?? '') == 'Press' || ($lot_no->press ?? 'No') == 'No'){
+                    elseif(($current_status ?? '') == 'Press' || ($lot_no->press ?? 'No') == 'No'){
                         $action = 'Packing';
                     }
                 }
@@ -48,7 +49,7 @@
                 <input type="text" class="form-control" name="action" id="action" value="{{ $action ?? '' }}" readonly required>
             </div>
             <div class="col-md-12 form-group">
-                @if (($action ?? '') == 'Printing/Embroidery' || ($action ?? '') == 'Send To Party' || ($lot_no->status ?? '') == 'Cutting')
+                @if (($action ?? '') == 'Printing/Embroidery')
                     <div class="form-check-size rtl-input" onchange="action_change()">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input me-2" id="embroidery" type="radio" name="action_change" value="Printing/Embroidery" checked="">
@@ -59,66 +60,82 @@
                             <label class="form-check-label" for="sewing_mech">Sewing Machine</label>
                         </div>
                     </div>
-                    <div class="form-check-size rtl-input" id="embroidery_box" onchange="embroidery_action()">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input me-2" id="in_source" type="radio" name="embroidery_action" value="In Source" checked="">
-                            <label class="form-check-label" for="in_source">In Source</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input me-2" id="out_source" type="radio" name="embroidery_action" value="Out Source" {{ ($lot_activity->embroidery_action ?? '') == 'Out Source' ? 'checked':'' }}>
-                            <label class="form-check-label" for="out_source">Out Source</label>
-                        </div>
-                    </div>
-                    <div id="out_source_box" style="display: {{ ($lot_activity->embroidery_action ?? '') == 'Out Source' ? 'block':'none' }}">
-                        <div class="form-group mb-3">
-                            <h6>Party Name <span>*</span></h6>
-                            <input type="text" class="form-control" name="party_name" id="" value="{{ $lot_activity->party_name ?? '' }}">
-                        </div>
-                    </div>
                 @endif
-                @if(($action ?? '') == 'Received From Party')
+                {{-- <div class="form-check-size rtl-input" id="embroidery_box" onchange="embroidery_action()">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input me-2" id="in_source" type="radio" name="embroidery_action" value="In Source" checked="">
+                        <label class="form-check-label" for="in_source">In Source</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input me-2" id="out_source" type="radio" name="embroidery_action" value="Out Source" {{ ($lot_activity->embroidery_action ?? '') == 'Out Source' || ($lot_no->last_activity->embroidery_action ?? '') == 'Out Source' ? 'checked':'' }}>
+                        <label class="form-check-label" for="out_source">Out Source</label>
+                    </div>
+                </div> --}}
+                {{-- <div id="out_source_box" style="display: {{ ($lot_activity->embroidery_action ?? '') == 'Out Source' || ($lot_no->last_activity->embroidery_action ?? '') == 'Out Source' ? 'block':'none' }}">
                     <div class="form-group mb-3">
                         <h6>Party Name <span>*</span></h6>
-                        <input type="text" class="form-control" name="party_name" id="" value="{{ $lot_no->last_activity->party_name ?? '' }}" readonly>
+                        <select class="form-select js-example-basic-single" name="party_id" id="party_id">
+                            <option value="" selected disabled>Select Option...</option>
+                            @foreach (App\Models\Party::where('status',1)->latest()->get() as $party)
+                            <option value="{{ $party->id }}" {{ ($lot_no->last_activity->party_id ?? '') == $party->id || ($lot_activity->party_id ?? '') == $party->id || ($lot_activity->party_name ?? '') == $party->name ? 'selected':'' }}>{{ $party->name }} / {{ $party->phone }}</option>
+                            @endforeach
+                        </select>
+                        <!-- <input type="text" class="form-control" name="party_name" id="" value="{{ $lot_activity->party_name ?? '' }}"> -->
                     </div>
-                @endif
-                @if (($action ?? '') == 'Overlock' || ($action ?? '') == 'Linking')
-                <div class="form-check-size rtl-input" onchange="action_change()">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input me-2" id="overlock" type="radio" name="action_change" value="Overlock" checked="">
-                        <label class="form-check-label" for="overlock">Overlock</label>
+                </div> --}}
+                {{-- @if(($action ?? '') == 'Received From Party')
+                    <div class="form-group mb-3">
+                        <h6>Party Name <span>*</span></h6>
+                        <input type="text" class="form-control" id="" value="{{ $lot_no->last_activity->party->name ?? '' }}" disabled>
+                        <input type="hidden" class="form-control" name="party_id" id="" value="{{ $lot_no->last_activity->party_id ?? '' }}" readonly>
                     </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input me-2" id="linking" type="radio" name="action_change" value="Linking" {{ ($action ?? '') == 'Linking' ? 'checked':'' }}>
-                        <label class="form-check-label" for="linking">Linking</label>
+                @endif --}}
+                <div class="col-md-12" id="in_source_box" style="display: {{ ($action ?? '') == 'Send To Party' || ($action ?? '') == 'Received From Party' ? 'none':'block' }}">
+                    <div class="form-check-size rtl-input" onchange="action_change()">
+                        @if (($action ?? '') == 'Overlock' || ($action ?? '') == 'Linking')
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input me-2" id="overlock" type="radio" name="action_change" value="Overlock" checked="">
+                                <label class="form-check-label" for="overlock">Overlock</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input me-2" id="linking" type="radio" name="action_change" value="Linking" {{ ($action ?? '') == 'Linking' ? 'checked':'' }}>
+                                <label class="form-check-label" for="linking">Linking</label>
+                            </div>
+                        @endif
+                        @if (($current_status ?? '') == 'Overlock')
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input me-2" id="linking" type="radio" name="action_change" value="Linking" {{ ($action ?? '') == 'Linking' ? 'checked':'' }}>
+                                <label class="form-check-label" for="linking">Linking</label>
+                            </div>
+                        @endif
+                        @if (($action ?? '') == 'Kaj Button' && ($lot_no->gender ?? '') == 'Male')
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input me-2" id="kaj_button" type="radio" name="action_change" value="Kaj Button" checked="">
+                                <label class="form-check-label" for="kaj_button">Kaj Button</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input me-2" id="thread_cutting" type="radio" name="action_change" value="Thread Cutting" {{ ($action ?? '') == 'Thread Cutting' ? 'checked':'' }}>
+                                <label class="form-check-label" for="thread_cutting">Thread Cutting</label>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="form-group mb-3">
+                        <h6><span class="text-dark" id="action_text">{{ ($action ?? '') }}</span> Master <span>*</span></h6>
+                        <select class="form-select js-example-basic-single" name="worker_id" id="worker_id" {{ ($action ?? '') == 'Send To Party' || ($action ?? '') == 'Received From Party' ? '':'required' }}>
+                            <option value="" selected disabled>Select Option...</option>
+                            @foreach (App\Models\Worker::whereJsonContains('role',($action ?? ''))->where('status',1)->latest()->get() as $worker)
+                            <option value="{{ $worker->id }}" {{ ($lot_activity->worker_id ?? '') == $worker->id ? 'selected':'' }}>{{ $worker->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
-                @endif
-                @if (($action ?? '') == 'Kaj Button' && ($lot_no->gender ?? '') == 'Male')
-                <div class="form-check-size rtl-input" onchange="action_change()">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input me-2" id="kaj_button" type="radio" name="action_change" value="Kaj Button" checked="">
-                        <label class="form-check-label" for="kaj_button">Kaj Button</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input me-2" id="thread_cutting" type="radio" name="action_change" value="Thread Cutting" {{ ($action ?? '') == 'Thread Cutting' ? 'checked':'' }}>
-                        <label class="form-check-label" for="thread_cutting">Thread Cutting</label>
-                    </div>
-                </div>
-                @endif
-            </div>
-            <div class="col-md-12 form-group mb-3" id="in_source_box" style="display: {{ ($action ?? '') == 'Send To Party' || ($action ?? '') == 'Received From Party' ? 'none':'block' }}">
-                <h6><span class="text-dark" id="action_text">{{ ($action ?? '') }}</span> Master <span>*</span></h6>
-                <select class="form-select js-example-basic-single" name="worker_id" id="worker_id" {{ ($action ?? '') == 'Send To Party' || ($action ?? '') == 'Received From Party' ? '':'required' }}>
-                    <option value="" selected disabled>Select Option...</option>
-                    @foreach (App\Models\Worker::whereJsonContains('role',($action ?? ''))->where('status',1)->latest()->get() as $worker)
-                    <option value="{{ $worker->id }}" {{ ($lot_activity->worker_id ?? '') == $worker->id ? 'selected':'' }}>{{ $worker->name }}</option>
-                    @endforeach
-                </select>
             </div>
             <div class="col-md-6 form-group mb-3">
-                <h6> <span class="text-dark" id="price_text">{{ ($action ?? '') == 'Send To Party' ? 'Total Cost':'Per Price' }}</span> <span>*</span></h6>
-                <input type="number" step="any" class="form-control" name="price" id="price" value="{{ $lot_activity->price ?? 0 }}" required>
+                <h6> <span class="text-dark" id="price_text">Per Price</span> <span>*</span></h6>
+                <input type="number" step="any" class="form-control" name="price" id="price" value="{{ $lot_activity->price ?? ($lot_no->last_activity->price ?? '') ?? 0 }}" required>
+                @if (($lot_activity->price ?? '') != '')
+                <small class="text-danger">Saved Price: <b>{{ $lot_activity->price ?? 0 }}</b></small>
+                @endif
             </div>
             <div class="col-md-6 form-group mb-3">
                 <h6>Date <span>*</span></h6>
@@ -144,7 +161,8 @@
         var lot_no = $('#lot_no').val();
         $('#price').attr('disabled',true);
         var worker_id = $('#worker_id').val();
-        $.get('{{ url('get_worker_price') }}',{ action:action, lot_no:lot_no }, function(data){
+        var party_id = $('#party_id').val();
+        $.get('{{ url('get_worker_price') }}',{ action:action, lot_no:lot_no, worker_id:worker_id, party_id:party_id }, function(data){
             $('#price').val(data);
             $('#price').attr('disabled',false);
         });
@@ -170,7 +188,7 @@
             $('#in_source_box').show(300);
             $('#price_text').text('Per Price');
             $('#worker_id').attr('required',true);
-            $('#action').val('Printing/Embroidery');
+            $('#action').val('{{ $action }}');
         }
     }
     function action_change(){

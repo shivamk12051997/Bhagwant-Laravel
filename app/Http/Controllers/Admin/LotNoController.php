@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Schema;
 
 class LotNoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('admin.lot_no.index');
+        return view('admin.lot_no.index' ,compact('request'));
     }
     public function datatable(Request $request)
     {
@@ -23,6 +23,9 @@ class LotNoController extends Controller
         $lot_no = LotNo::orderBy('id','desc');
         if(($request->status ?? '') != 'All'){
             $lot_no = $lot_no->where('status', $request->status);
+        }
+        if(($request->page_name ?? '') != 'All'){
+            $lot_no = $lot_no->where('is_complete', ($request->page_name == 'Complete' ? 1 : 0));
         }
         if(($request->lot_no_from ?? '') != ''){
             $lot_no = $lot_no->where('lot_no', '>=', $request->lot_no_from);
@@ -92,6 +95,17 @@ class LotNoController extends Controller
         $lot_activity = LotNoActivity::find($request->lot_activity_id);
         return view('admin.lot_no.activity_ajax_edit', compact('lot_no','lot_activity'));
     }
+    public function activity_delete($id)
+    {
+        $lot_activity = LotNoActivity::find($id);
+        $lot_activity->delete();
+        
+        $lot_no = LotNo::find($lot_activity->lot_no_id);
+        $lot_no->status = $lot_no->last_activity->action;
+        $lot_no->save();
+
+        return redirect()->back()->with('danger','Lot No Activity Deleted Successfully');
+    }
     public function activity_insert(Request $request)
     {
         $input =  $request->all();
@@ -103,6 +117,8 @@ class LotNoController extends Controller
         $lot_no->is_complete = $request->action == 'Packing' || $request->action == 'Received From Party' ? 1 : 0;
         $lot_no->save();
         $input['pcs'] = $lot_no->pcs;
+        $input['total_earning'] = ($lot_no->pcs * $request->price);
+
         $lot_activity = LotNoActivity::updateOrCreate(['id' => $input['id']],$input);
         
         return $lot_activity;

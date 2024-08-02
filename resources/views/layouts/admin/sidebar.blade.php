@@ -32,6 +32,15 @@
               <i data-feather="home"></i><span>Worker Salary</span>
             </a>
           </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title">
+              <i data-feather="package"></i><span>All Challans</span>
+            </a>
+            <ul class="sidebar-submenu">
+              <li><a href="{{ route('challan.index') }}?in_out=Out">Challan Out</a></li>
+              <li><a href="{{ route('challan.index') }}?in_out=In">Challan In</a></li>
+            </ul>
+          </li>
           <li class="sidebar-main-title">
             <div>
               <h6>Settings</h6>
@@ -52,6 +61,7 @@
               <li><a href="{{ route('master.color.index') }}">Color</a></li>
               <li><a href="{{ route('master.worker.index') }}">Worker Master</a></li>
               <li><a href="{{ route('master.master_lot.index') }}">Master Lot</a></li>
+              <li><a href="{{ route('master.party.index') }}">Party </a></li>
             </ul>
           </li>
           <li class="sidebar-list">

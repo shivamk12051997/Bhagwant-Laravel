@@ -53,6 +53,7 @@
         <main class="main-content  ">
             @include('layouts.front.header')
             <div class="content-wrapper  js-content-wrapper">
+              
                 @yield('content')
 
                 @if (!Request::is('/'))

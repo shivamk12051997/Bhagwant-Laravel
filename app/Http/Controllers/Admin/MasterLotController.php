@@ -62,6 +62,6 @@ class MasterLotController extends Controller
         $master_lot = MasterLot::find($id);
         $master_lot->delete();
 
-        return redirect()->back()->with('danger','MasterLot Deleted Successfully');
+        return redirect()->back()->with('danger','Master Lot Deleted Successfully');
     }
 }

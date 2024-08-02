@@ -1,165 +1,17 @@
 @extends('layouts.admin.app')
 
-@section('title', 'View Lot No.')
+@section('title', 'Worker Salary - '.($worker->name ?? 'N/A'))
 
 @section('breadcrumb-items')
-    <li class="breadcrumb-item active">Lot No.</li>
+    <li class="breadcrumb-item active">Worker Salary</li>
 @endsection
 
 @section('css')
 <style>
-  
-.activity-dot-primary {
-  min-width: 6px;
-  height: 6px;
-  background-color: #7366FF;
-  border-radius: 100%;
-  outline: 5px solid rgba(115, 102, 255, 0.25);
-  position: relative;
-  z-index: 2;
-}
-
-.timeline-dot-primary {
-  min-width: 12px;
-  height: 12px;
-  background-color: #7366FF;
-  outline: 5px solid rgba(115, 102, 255, 0.25);
-  position: relative;
-  z-index: 2;
-}
-
-.activity-dot-secondary {
-  min-width: 6px;
-  height: 6px;
-  background-color: #FF3364;
-  border-radius: 100%;
-  outline: 5px solid rgba(255, 51, 100, 0.25);
-  position: relative;
-  z-index: 2;
-}
-
-.timeline-dot-secondary {
-  min-width: 12px;
-  height: 12px;
-  background-color: #FF3364;
-  outline: 5px solid rgba(255, 51, 100, 0.25);
-  position: relative;
-  z-index: 2;
-}
-
-.activity-dot-success {
-  min-width: 6px;
-  height: 6px;
-  background-color: #54BA4A;
-  border-radius: 100%;
-  outline: 5px solid rgba(84, 186, 74, 0.25);
-  position: relative;
-  z-index: 2;
-}
-
-.timeline-dot-success {
-  min-width: 12px;
-  height: 12px;
-  background-color: #54BA4A;
-  outline: 5px solid rgba(84, 186, 74, 0.25);
-  position: relative;
-  z-index: 2;
-}
-
-.activity-dot-danger {
-  min-width: 6px;
-  height: 6px;
-  background-color: #FC4438;
-  border-radius: 100%;
-  outline: 5px solid rgba(252, 68, 56, 0.25);
-  position: relative;
-  z-index: 2;
-}
-
-.timeline-dot-danger {
-  min-width: 12px;
-  height: 12px;
-  background-color: #FC4438;
-  outline: 5px solid rgba(252, 68, 56, 0.25);
-  position: relative;
-  z-index: 2;
-}
-
-.activity-dot-info {
-  min-width: 6px;
-  height: 6px;
-  background-color: #16C7F9;
-  border-radius: 100%;
-  outline: 5px solid rgba(22, 199, 249, 0.25);
-  position: relative;
-  z-index: 2;
-}
-
-.timeline-dot-info {
-  min-width: 12px;
-  height: 12px;
-  background-color: #16C7F9;
-  outline: 5px solid rgba(22, 199, 249, 0.25);
-  position: relative;
-  z-index: 2;
-}
-
-.activity-dot-light {
-  min-width: 6px;
-  height: 6px;
-  background-color: #f4f4f4;
-  border-radius: 100%;
-  outline: 5px solid rgba(244, 244, 244, 0.25);
-  position: relative;
-  z-index: 2;
-}
-
-.timeline-dot-light {
-  min-width: 12px;
-  height: 12px;
-  background-color: #f4f4f4;
-  outline: 5px solid rgba(244, 244, 244, 0.25);
-  position: relative;
-  z-index: 2;
-}
-
-.activity-dot-dark {
-  min-width: 6px;
-  height: 6px;
-  background-color: #2c323f;
-  border-radius: 100%;
-  outline: 5px solid rgba(44, 50, 63, 0.25);
-  position: relative;
-  z-index: 2;
-}
-
-.timeline-dot-dark {
-  min-width: 12px;
-  height: 12px;
-  background-color: #2c323f;
-  outline: 5px solid rgba(44, 50, 63, 0.25);
-  position: relative;
-  z-index: 2;
-}
-
-.activity-dot-warning {
-  min-width: 6px;
-  height: 6px;
-  background-color: #FFAA05;
-  border-radius: 100%;
-  outline: 5px solid rgba(255, 170, 5, 0.25);
-  position: relative;
-  z-index: 2;
-}
-
-.timeline-dot-warning {
-  min-width: 12px;
-  height: 12px;
-  background-color: #FFAA05;
-  outline: 5px solid rgba(255, 170, 5, 0.25);
-  position: relative;
-  z-index: 2;
-}
+  table.dataTable input.form-check-input{
+    height: 1em;
+    border: 1px solid #0000005a;
+  }
 </style>
 @endsection
 
@@ -179,7 +31,7 @@
                 </div>
                 <hr>
                 <ul>
-                  @php
+                  {{-- @php
                     $totalQty = 0;
                     $totalEarnings = 0;
                     foreach ($worker->lot_activities as $activity) {
@@ -187,9 +39,11 @@
                         $totalQty += $qty;
                         $totalEarnings += $qty * $activity->price;
                     }
-                  @endphp
-                  <li><b>Total QTY:</b> {{ $totalQty ?? 'N/A' }}</li>
-                  <li><b>Total Earning:</b> {{ $totalEarnings ?? 'N/A' }}</li>
+                  @endphp --}}
+                  <li><b>Total QTY:</b> {{ $total_pcs = $worker->lot_activities()->whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->sum('pcs') ?? 0 }}</li>
+                  <li><b>Total Earning:</b> {{ $total_earnings = $worker->lot_activities()->whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->sum('total_earning') ?? 0 }}</li>
+                  <li><b>Paid Amount:</b> {{ $total_paid_amount = $worker->lot_activities()->whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->where('is_paid','1')->sum('total_earning') ?? 0 }}</li>
+                  <li><b>Balance Amount:</b> {{ $balance =  $total_earnings - $total_paid_amount }}</li>
                   {{-- <li><b>Phone Number:</b> {{ $worker->phone ?? 'N/A' }}</li> --}}
                   <li>
                     <b>Worker Role:</b> 
@@ -202,66 +56,76 @@
             </div>
         </div>
         <div class="col-xl-9 col-md-12 box-col-12">
-          <div class="card mb-0 notification main-timeline">
-            <div class="card-header d-flex">
+          <div class="card">
+            <form class="card-header d-flex justify-content-between align-items-end" action="" method="GET">
               <h4 class="mb-0">Salary Details</h4>
-            </div>
-            <div class="card-body dark-timeline">
+              <div class="form-group">
+                <label for="from">From Date</label>
+                <input type="date" name="from_date" id="" value="{{ $request->from_date ?? date('Y-m-d', strtotime('-1 month')) }}" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="to">To Date</label>
+                <input type="date" name="to_date" id="" value="{{ $request->to_date ?? date('Y-m-d') }}" class="form-control">
+              </div>
+              <div class="form-group">
+                <button class="btn btn-primary" id="filter">Get Data</button>
+              </div>
+            </form>
+            <form class="card-body dark-timeline" action="{{ route('worker_salary.lot_activity.is_paid') }}" method="POST">
+              @csrf
               <div class="dt-ext table-responsive">
                 <table class="table table-striped table-hover Datatable nowrap" id="datatable-excel">
                     <thead>
                         <tr>
-                          <th>#</th>
+                          <th># <input type="checkbox" class="form-check-input" name="select_all" id="select_all" onchange="check_all()"></th>
+                          <th>Is Paid?</th>
                           <th>Lot No.</th>
-                          <th>Color</th>
-                          <th>Size</th>
+                          <th>Date</th>
                           <th>PCS</th>
                           <th>Per Price</th>
                           <th>Total Earn</th>
-                          <th>Date</th>
+                          <th>Size</th>
+                          <th>Color</th>
                           <th>Created Date</th>
                         </tr>
                     </thead>
                     <tbody>
-                      @php
-                        $total_pcs = 0;
-                        $total_earnings = 0;
-                      @endphp
                       @forelse ($lot_activity as $item)
                         <tr>
-                          <td>{{ $loop->index + 1 }}</td>
+                          <td>{{ $loop->index + 1 }} <input type="checkbox" class="form-check-input" name="lot_no_activity_id[]" value="{{ $item->id }}" id=""></td>
+                          <td>
+                            <span class="badge badge-{{ $item->is_paid == '1' ? 'success':'danger' }}">{{ $item->is_paid == '1' ? 'Paid':'Unpaid' }}</span>
+                          </td>
                           <td><a href="{{route('lot_no.show',$item->lot_no->id)}}" target="_blank">{{ $item->lot_no->lot_no ?? 'N/A' }}</a></td>
-                          <td>{{ $item->lot_no->color->name ?? 'N/A' }}</td>
-                          <td>{{ $item->lot_no->size->name ?? 'N/A' }}</td>
+                          <td>{{ ($item->date ?? '') == '' ? "N/A" : date('d M,Y',strtotime($item->date)) }}</td>
                           <td>{{ $item->pcs ?? 'N/A' }}</td>
                           <td>{{ $item->price ?? 'N/A' }}</td>
-                          <td>{{ ($item->pcs ?? 0) * ($item->price ?? 0) }}</td>
-                          <td>{{ ($item->date ?? '') == '' ? "N/A" : date('d M,Y',strtotime($item->date)) }}</td>
+                          <td>{{ $item->total_earning ?? 'N/A' }}</td>
+                          <td>{{ $item->lot_no->size->name ?? 'N/A' }}</td>
+                          <td>{{ $item->lot_no->color->name ?? 'N/A' }}</td>
                           <td>{{ date('d M,Y h:i A',strtotime($item->created_at)) }}</td>
                         </tr>
-                        @php
-                          $total_pcs += $item->pcs ?? 0;
-                          $total_earnings += ($item->pcs ?? 0) * ($item->price ?? 0);
-                        @endphp
                       @endforeach
-            
-                    </tbody>
-                    <tfoot>
                       <tr>
                         <th></th>
-                        <th></th>
-                        <th></th>
+                        <th class="text-end">Paid Amount:</th>
+                        <th>{{ $total_paid_amount ?? 0 }}</th>
                         <th class="text-end">Total PCS:</th>
                         <th>{{ $total_pcs ?? 0 }}</th>
                         <th class="text-end">Total Earnings:</th>
                         <th>{{ $total_earnings ?? 0 }}</th>
-                        <th></th>
+                        <th class="text-end">Balance Amount:</th>
+                        <th>{{ $balance ?? 0 }}</th>
                         <th></th>
                       </tr>
-                    </tfoot>
+                    </tbody>
                 </table>
               </div>
-            </div>
+              <div class="form-group">
+                <button class="btn btn-success me-3" name="is_paid" value="1">Save as Paid</button>
+                <button class="btn btn-danger me-3" name="is_paid" value="0">Save as Unpaid</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -280,6 +144,15 @@
 @endsection
 
 @section('script')
+<script>
+  function check_all(){
+      if($('#select_all').is(':checked')){
+          $('.form-check-input').prop('checked',true);
+      }else{
+          $('.form-check-input').prop('checked',false);
+      }
+  }
+</script>
 <script>
   $(document).ready(function() {
     var title = "{{ ($worker->name ?? 'N/A') .' - '.date('d M, Y', strtotime($request->from_date)). ' - '.date('d M, Y', strtotime($request->to_date)) }}";
@@ -307,27 +180,5 @@
       ],
     });
   });
-
-  function edit_modal(lot_no_id, lot_activity_id){
-      $('#ajax_html').html('<div class="loader-box"><div class="loader-37"></div></div>');
-      $.get('{{ url('lot_no/activity') }}',{lot_no_id:lot_no_id, lot_activity_id:lot_activity_id}, function(data){
-          $('#ajax_html').removeClass();
-          $('#ajax_html').addClass('modal-dialog modal-lg');
-          $('#ajax_html').html(data);
-      });
-  }
-  function store_form(event){
-      var form = event.target;
-      var form_data = $(form).serializeArray();
-      var form_name = $('#form_name').val();
-      $('#edit_modal').modal('hide');
-      if(form_name == 'Lot Activity'){
-          $.post('{{ route('lot_no.activity_insert') }}', form_data, function(data){
-              $.notify({ title:'Success', message:'Lot Activity Saved Successfully' }, { type:'success', });
-              // reload the webpage
-              window.location.reload();
-          });
-      }
-  }
 </script>
 @endsection
