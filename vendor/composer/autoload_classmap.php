@@ -41,6 +41,8 @@ return array(
     'App\\Http\\Middleware\\ValidateSignature' => $baseDir . '/app/Http/Middleware/ValidateSignature.php',
     'App\\Http\\Middleware\\VerifyCsrfToken' => $baseDir . '/app/Http/Middleware/VerifyCsrfToken.php',
     'App\\Models\\Challan' => $baseDir . '/app/Models/Challan.php',
+    'App\\Models\\ChallanIn' => $baseDir . '/app/Models/ChallanIn.php',
+    'App\\Models\\ChallanOut' => $baseDir . '/app/Models/ChallanOut.php',
     'App\\Models\\Color' => $baseDir . '/app/Models/Color.php',
     'App\\Models\\LotNo' => $baseDir . '/app/Models/LotNo.php',
     'App\\Models\\LotNoActivity' => $baseDir . '/app/Models/LotNoActivity.php',

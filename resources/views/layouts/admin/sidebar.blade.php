@@ -38,7 +38,7 @@
             </a>
             <ul class="sidebar-submenu">
               <li><a href="{{ route('challan.index') }}?in_out=Out">Challan Out</a></li>
-              <li><a href="{{ route('challan.index') }}?in_out=In">Challan In</a></li>
+              {{-- <li><a href="{{ route('challan.index') }}?in_out=In">Challan In</a></li> --}}
             </ul>
           </li>
           <li class="sidebar-main-title">

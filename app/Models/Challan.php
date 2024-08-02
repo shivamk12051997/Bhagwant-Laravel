@@ -13,12 +13,11 @@ class Challan extends Model
     protected $fillable = [
         'created_by_id',
         'challan_no',
+        'challan_out_id',
         'in_out',
         'date',
         'party_id',
-        'received_pcs',
         'price',
-        'total_amount',
         'status',
         'remarks',
         'deleted_at',
@@ -32,8 +31,20 @@ class Challan extends Model
     {
     	return $this->belongsTo('App\Models\Party','party_id','id');
     }
+    public function challan_out()
+    {
+    	return $this->belongsTo('App\Models\Challan','challan_out_id','id');
+    }
     public function lot_activities()
     {
     	return $this->hasMany('App\Models\LotNoActivity','challan_id','id');
+    }
+    public function sent_pcs()
+    {
+    	return $this->hasMany('App\Models\LotNoActivity','challan_out_id','id')->where('action','Send To Party');
+    }
+    public function received_pcs()
+    {
+    	return $this->hasMany('App\Models\LotNoActivity','challan_out_id','id')->where('action','Received From Party');
     }
 }

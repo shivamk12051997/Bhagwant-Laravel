@@ -6,7 +6,9 @@
                 <th>Challan No.</th>
                 <th>Date</th>
                 <th>Party Name</th>
-                <th>{{ request()->in_out == 'Out' ? 'Sent' : 'Received' }} PCS</th>
+                <th>Sent PCs</th>
+                <th>Received PCs</th>
+                <th>Remaining PCs</th>
                 <th>Price</th>
                 <th>Total Amount</th>
                 <th>Lot No.</th>
@@ -17,6 +19,7 @@
             @php
                 $total_sent_pcs = 0;
                 $total_received_pcs = 0;
+                $total_remaining_pcs = 0;
                 $total_amount = 0;
             @endphp
             @foreach ($challan as $key => $item)
@@ -25,9 +28,11 @@
                 <td>{{ $item->challan_no ?? 'N/A' }}</td>
                 <td>{{ ($item->date ?? '') == '' ? "N/A" : date('d M,Y',strtotime($item->date)) }}</td>
                 <td>{{ $item->party->name ?? 'N/A' }}</td>
-                <td>{{ $item->lot_activities->sum('pcs') ?? 'N/A' }}</td>
+                <td>{{ $sent_pcs = $item->sent_pcs->sum('pcs') ?? 'N/A' }}</td>
+                <td>{{ $received_pcs = ($item->received_pcs ?? '') == '' ? 0 : $item->received_pcs->sum('pcs') }}</td>
+                <td>{{ $remaining_pcs = $sent_pcs - $received_pcs }}</td>
                 <td>{{ $item->price ?? 'N/A' }}</td>
-                <td>{{ $item->lot_activities->sum('pcs') * ($item->price ?? 0) }}</td>
+                <td>{{ $sent_pcs * ($item->price ?? 0) }}</td>
                 <td>
                     @foreach (($item->lot_activities ?? []) as $lot_activity)
                         @php
@@ -37,15 +42,19 @@
                     @endforeach
                 </td>
                 <td>
+                    <a href="{{ route('challan.show', $item->id) }}" class="text-primary p-1 f-22" data-toggle="tooltip" title="View">
+                        <i class="fa fa-eye"></i>
+                    </a>
                     <a href="#" class="text-warning p-1 f-22" data-toggle="tooltip" title="Edit" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $item->id }},'{{ $item->in_out }}')">
                         <i class="fa fa-edit"></i>
                     </a>
                 </td>
                 @php
-                $total_sent_pcs += $item->sent_pcs ?? 0;
-                $total_received_pcs += $item->received_pcs ?? 0;
-                $total_amount += $item->total_amount ?? 0;
-            @endphp
+                    $total_sent_pcs += $item->lot_activities->sum('pcs');
+                    $total_received_pcs += $received_pcs;
+                    $total_remaining_pcs += $remaining_pcs;
+                    $total_amount += $item->lot_activities->sum('pcs') * ($item->price ?? 0);
+                @endphp
             </tr>
             @endforeach
             <tr>
@@ -55,6 +64,7 @@
                 <th></th>
                 <th>Total: {{ $total_sent_pcs ?? 0 }}</th>
                 <th>Total: {{ $total_received_pcs ?? 0 }}</th>
+                <th>Total: {{ $total_remaining_pcs ?? 0 }}</th>
                 <th></th>
                 <th>Total: {{ $total_amount ?? 0 }}</th>
                 <th></th>

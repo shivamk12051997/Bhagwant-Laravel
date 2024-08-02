@@ -107,7 +107,7 @@ Route::group(['middleware' => ['auth','is_User']], function () {
     Route::post('challan_in/insert', [ChallanController::class, 'challan_in_insert'])->name('challan_in.insert');
     Route::get('challan/edit/{id}', [ChallanController::class, 'edit'])->name('challan.edit');
     Route::get('challan/delete/{id}', [ChallanController::class, 'delete'])->name('challan.delete');
-    Route::get('challan/in/{id}', [ChallanController::class, 'challan_in'])->name('challan.in');
+    Route::get('challan/show/{id}', [ChallanController::class, 'show'])->name('challan.show');
 
     // Worker Salary
     Route::get('worker_salary', [MasterWorkerController::class, 'worker_salary'])->name('worker_salary.index');

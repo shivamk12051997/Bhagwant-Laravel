@@ -71,6 +71,7 @@ class ChallanController extends Controller
             $value['created_by_id'] = auth()->user()->id;
             $value['lot_no_id'] = $lot_no->id;
             $value['challan_id'] = ($challan->id ?? 0);
+            $value['challan_out_id'] = ($challan->id ?? 0);
             $value['action'] = $lot_no->status;
             $value['date'] = $request->date;
             $value['pcs'] = $lot_no->pcs;
@@ -116,6 +117,8 @@ class ChallanController extends Controller
                 if($lot_no->pcs == ($item['received_pcs'] + LotNoActivity::where('action','Received From Party')->where('lot_no_id', $lot_no->id)->sum('pcs'))){
                     $lot_no->is_complete = 1;
                     $lot_no->status = 'Received From Party';
+                    $challan->status = 1;
+                    $challan->save();
                 }else{
                     $lot_no->status = 'Received From Party';
                     $lot_no->is_complete = null;
@@ -126,6 +129,8 @@ class ChallanController extends Controller
             $value['created_by_id'] = auth()->user()->id;
             $value['lot_no_id'] = $lot_no->id;
             $value['challan_id'] = ($challan->id ?? 0);
+            $value['challan_out_id'] = ($request->challan_out_id ?? 0);
+            $value['challan_in_id'] = ($challan->id ?? 0);
             $value['action'] = 'Received From Party';
             $value['date'] = $request->date;
             $value['pcs'] = $item['received_pcs'];
@@ -150,7 +155,7 @@ class ChallanController extends Controller
             }
         }
 
-        return $challan;
+        return redirect()->back()->with('success','Challan In Added Successfully');
     }
 
     public function edit(Request $request, $id)
@@ -171,9 +176,9 @@ class ChallanController extends Controller
         return redirect()->back()->with('danger','Challan Deleted Successfully');
     }
 
-    public function challan_in($id)
+    public function show($id)
     {
         $challan = Challan::find($id);
-        return view('admin.challan.challan_in', compact('challan'));
+        return view('admin.challan.show', compact('challan'));
     }
 }

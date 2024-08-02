@@ -571,6 +571,8 @@ class ComposerStaticInitaeeeeac954198cd0f7db3da877e64f8b
         'App\\Http\\Middleware\\ValidateSignature' => __DIR__ . '/../..' . '/app/Http/Middleware/ValidateSignature.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
         'App\\Models\\Challan' => __DIR__ . '/../..' . '/app/Models/Challan.php',
+        'App\\Models\\ChallanIn' => __DIR__ . '/../..' . '/app/Models/ChallanIn.php',
+        'App\\Models\\ChallanOut' => __DIR__ . '/../..' . '/app/Models/ChallanOut.php',
         'App\\Models\\Color' => __DIR__ . '/../..' . '/app/Models/Color.php',
         'App\\Models\\LotNo' => __DIR__ . '/../..' . '/app/Models/LotNo.php',
         'App\\Models\\LotNoActivity' => __DIR__ . '/../..' . '/app/Models/LotNoActivity.php',

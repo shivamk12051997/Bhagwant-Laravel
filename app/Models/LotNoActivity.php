@@ -15,6 +15,7 @@ class LotNoActivity extends Model
         'lot_no_id',
         'worker_id',
         'challan_id',
+        'challan_out_id',
         'action',
         'date',
         'pcs',

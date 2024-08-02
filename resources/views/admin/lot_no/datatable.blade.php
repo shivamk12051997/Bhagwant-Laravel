@@ -67,7 +67,7 @@
     </table>
     <button type="button" class="btn btn-danger btn-sm" onclick="delete_lots()">Delete Selected</button>
     <button type="button" class="btn btn-primary btn-sm" onclick="challan_out_lots()" data-bs-toggle="modal" data-bs-target="#edit_modal" >Challan Out Selected</button>
-    <button type="button" class="btn btn-primary btn-sm" onclick="challan_in_lots()" data-bs-toggle="modal" data-bs-target="#edit_modal" >Challan In Selected</button>
+    {{-- <button type="button" class="btn btn-primary btn-sm" onclick="challan_in_lots()" data-bs-toggle="modal" data-bs-target="#edit_modal" >Challan In Selected</button> --}}
 </div>
 
 <div>
@@ -86,17 +86,17 @@
             $('#ajax_html').html(data);
         });
     }
-    function challan_in_lots(){
-        var lot_no_id = $('input[name="lot_no_id[]"]:checkbox:checked').map(function() { return $(this).val(); }).get();
-        var in_out = 'In';
-        var id = 0;
-        $('#ajax_html').html('<div class="loader-box"><div class="loader-37"></div></div>');
-        $.get('{{ url('challan/edit') }}/'+id, { in_out:in_out, lot_no_id:lot_no_id }, function(data){
-            $('#ajax_html').removeClass();
-            $('#ajax_html').addClass('modal-dialog modal-xl');
-            $('#ajax_html').html(data);
-        });
-    }
+    // function challan_in_lots(){
+    //     var lot_no_id = $('input[name="lot_no_id[]"]:checkbox:checked').map(function() { return $(this).val(); }).get();
+    //     var in_out = 'In';
+    //     var id = 0;
+    //     $('#ajax_html').html('<div class="loader-box"><div class="loader-37"></div></div>');
+    //     $.get('{{ url('challan/edit') }}/'+id, { in_out:in_out, lot_no_id:lot_no_id }, function(data){
+    //         $('#ajax_html').removeClass();
+    //         $('#ajax_html').addClass('modal-dialog modal-xl');
+    //         $('#ajax_html').html(data);
+    //     });
+    // }
     function delete_lots(){
         swal({
             title: "Are you sure?",
