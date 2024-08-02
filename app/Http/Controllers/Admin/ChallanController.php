@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\LotNo;
+use App\Models\Challan;
 use Illuminate\Http\Request;
 use App\Models\LotNoActivity;
 use App\Http\Controllers\Controller;
