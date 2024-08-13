@@ -33,13 +33,19 @@
             </a>
           </li>
           <li class="sidebar-list">
-            <a class="sidebar-link sidebar-title">
-              <i data-feather="package"></i><span>All Challans</span>
+            <a class="sidebar-link sidebar-title link-nav" href="{{ route('party_salary.index') }}">
+              <i data-feather="home"></i><span>Party Salary</span>
             </a>
-            <ul class="sidebar-submenu">
-              <li><a href="{{ route('challan.index') }}?in_out=Out">Challan Out</a></li>
-              {{-- <li><a href="{{ route('challan.index') }}?in_out=In">Challan In</a></li> --}}
-            </ul>
+          </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title link-nav" href="{{ route('challan.index') }}?in_out=Out">
+              <i data-feather="home"></i><span>Challan Out</span>
+            </a>
+          </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title link-nav" href="{{ route('material_challan.index') }}">
+              <i data-feather="home"></i><span>Material Challan</span>
+            </a>
           </li>
           <li class="sidebar-main-title">
             <div>
@@ -62,6 +68,7 @@
               <li><a href="{{ route('master.worker.index') }}">Worker Master</a></li>
               <li><a href="{{ route('master.master_lot.index') }}">Master Lot</a></li>
               <li><a href="{{ route('master.party.index') }}">Party </a></li>
+              <li><a href="{{ route('master.material_item.index') }}">Material Item </a></li>
             </ul>
           </li>
           <li class="sidebar-list">

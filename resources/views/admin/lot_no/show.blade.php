@@ -194,7 +194,7 @@
           <div class="card mb-0 notification main-timeline">
             <div class="card-header d-flex">
               <h4 class="mb-0">Lot Activity</h4>
-              @if (($lot_no->is_complete ?? '') != '1')
+              @if (($lot_no->is_complete ?? '') != '1' && ($lot_no->status ?? '') != 'Send To Party')
               <a href="#" class="btn btn-primary ms-auto col-auto" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $lot_no->id }}, 0)">Add Activity</a>
               @endif
             </div>

@@ -8,6 +8,7 @@ use App\Models\Worker;
 use App\Models\MasterLot;
 use Illuminate\Http\Request;
 use App\Models\LotNoActivity;
+use App\Models\MaterialItem;
 
 class AjaxController extends Controller
 {
@@ -79,5 +80,10 @@ class AjaxController extends Controller
         ->get();
 
         return $net_pcs_by_lot;
+    }
+    function get_material_item(Request $request)
+    {
+        $material_item = MaterialItem::find($request->material_item_id) ?? 0;
+        return $material_item;
     }
 }

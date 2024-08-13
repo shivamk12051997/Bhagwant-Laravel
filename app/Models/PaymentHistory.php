@@ -6,29 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Worker extends Model
+class PaymentHistory extends Model
 {
     use HasFactory;
     use SoftDeletes;
     protected $fillable = [
         'created_by_id',
-        'name',
-        'worker_code',
+        'worker_id',
+        'party_id',
         'role',
-        'price',
-        'status',
+        'payment_date',
+        'payment_mode',
+        'amount',
+        'remarks',
+        'deleted_at',
     ];
 
     public function created_by()
     {
     	return $this->belongsTo('App\Models\User','created_by_id','id');
-    }
-    public function lot_activities()
-    {
-    	return $this->hasMany('App\Models\LotNoActivity','worker_id','id');
-    }
-    public function payment_histories()
-    {
-    	return $this->hasMany('App\Models\PaymentHistory','worker_id','id');
     }
 }

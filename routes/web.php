@@ -7,13 +7,16 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ErrorController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\LotNoController;
-use App\Http\Controllers\Admin\ChallanController;
+use App\Http\Controllers\ChallanController;
 use App\Http\Controllers\Admin\WebsiteController;
+use App\Http\Controllers\PaymentHistoryController;
 use App\Http\Controllers\Admin\MasterLotController;
+use App\Http\Controllers\MaterialChallanController;
 use App\Http\Controllers\Admin\MasterSizeController;
 use App\Http\Controllers\Admin\MasterColorController;
 use App\Http\Controllers\Admin\MasterPartyController;
 use App\Http\Controllers\Admin\MasterWorkerController;
+use App\Http\Controllers\Admin\MasterMaterialItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +38,7 @@ Route::get('/get_master_lot_details', [AjaxController::class, 'get_master_lot_de
 Route::get('/get_party_details', [AjaxController::class, 'get_party_details'])->name('get_party_details');
 Route::get('/get_all_lot_no_total_pcs', [AjaxController::class, 'get_all_lot_no_total_pcs'])->name('get_all_lot_no_total_pcs');
 Route::get('/get_all_lot_no_pcs', [AjaxController::class, 'get_all_lot_no_pcs'])->name('get_all_lot_no_pcs');
+Route::get('/get_material_item', [AjaxController::class, 'get_material_item'])->name('get_material_item');
 
 Auth::routes();
 
@@ -84,6 +88,13 @@ Route::group(['middleware' => ['auth','is_Admin']], function () {
     Route::get('master/party/edit/{id}', [MasterPartyController::class, 'edit'])->name('master.party.edit');
     Route::get('master/party/delete/{id}', [MasterPartyController::class, 'delete'])->name('master.party.delete');
     Route::get('master/party/status/{id}', [MasterPartyController::class, 'status'])->name('master.party.status');
+    // Material Item
+    Route::get('master/material_item', [MasterMaterialItemController::class, 'index'])->name('master.material_item.index');
+    Route::get('master/material_item/datatable', [MasterMaterialItemController::class, 'datatable'])->name('master.material_item.datatable');
+    Route::post('master/material_item/insert', [MasterMaterialItemController::class, 'insert'])->name('master.material_item.insert');
+    Route::get('master/material_item/edit/{id}', [MasterMaterialItemController::class, 'edit'])->name('master.material_item.edit');
+    Route::get('master/material_item/delete/{id}', [MasterMaterialItemController::class, 'delete'])->name('master.material_item.delete');
+    Route::get('master/material_item/status/{id}', [MasterMaterialItemController::class, 'status'])->name('master.material_item.status');
 });
 
 // ___________________________ Admin & User Route ____________________________
@@ -100,6 +111,23 @@ Route::group(['middleware' => ['auth','is_User']], function () {
     Route::post('lot_no/activity_insert', [LotNoController::class, 'activity_insert'])->name('lot_no.activity_insert');
     Route::post('lot_no/multiple_delete', [LotNoController::class, 'multiple_delete'])->name('lot_no.multiple_delete');
 
+    // Worker Salary
+    Route::get('worker_salary', [MasterWorkerController::class, 'worker_salary'])->name('worker_salary.index');
+    Route::get('worker_salary/datatable', [MasterWorkerController::class, 'worker_salary_datatable'])->name('worker_salary.datatable');
+    Route::get('worker_salary/show/{worker_id}', [MasterWorkerController::class, 'worker_salary_show'])->name('worker_salary.show');
+    Route::post('worker_salary/lot_activity/is_paid', [MasterWorkerController::class, 'lot_activity_is_paid'])->name('worker_salary.lot_activity.is_paid');
+    // Party Salary
+    Route::get('party_salary', [MasterPartyController::class, 'party_salary'])->name('party_salary.index');
+    Route::get('party_salary/datatable', [MasterPartyController::class, 'party_salary_datatable'])->name('party_salary.datatable');
+    Route::get('party_salary/show/{party_id}', [MasterPartyController::class, 'party_salary_show'])->name('party_salary.show');
+
+    // Payment History Route
+    Route::get('payment_history', [PaymentHistoryController::class, 'index'])->name('payment_history.index');
+    Route::get('payment_history/datatable', [PaymentHistoryController::class, 'datatable'])->name('payment_history.datatable');
+    Route::post('payment_history/insert', [PaymentHistoryController::class, 'insert'])->name('payment_history.insert');
+    Route::get('payment_history/edit/{id}', [PaymentHistoryController::class, 'edit'])->name('payment_history.edit');
+    Route::get('payment_history/delete/{id}', [PaymentHistoryController::class, 'delete'])->name('payment_history.delete');
+
     //  Challan No.
     Route::get('challan', [ChallanController::class, 'index'])->name('challan.index');
     Route::get('challan/datatable', [ChallanController::class, 'datatable'])->name('challan.datatable');
@@ -109,11 +137,12 @@ Route::group(['middleware' => ['auth','is_User']], function () {
     Route::get('challan/delete/{id}', [ChallanController::class, 'delete'])->name('challan.delete');
     Route::get('challan/show/{id}', [ChallanController::class, 'show'])->name('challan.show');
 
-    // Worker Salary
-    Route::get('worker_salary', [MasterWorkerController::class, 'worker_salary'])->name('worker_salary.index');
-    Route::get('worker_salary/datatable', [MasterWorkerController::class, 'worker_salary_datatable'])->name('worker_salary.datatable');
-    Route::get('worker_salary/show/{worker_id}', [MasterWorkerController::class, 'worker_salary_show'])->name('worker_salary.show');
-    Route::post('worker_salary/lot_activity/is_paid', [MasterWorkerController::class, 'lot_activity_is_paid'])->name('worker_salary.lot_activity.is_paid');
+    // Material Challan Route
+    Route::get('material_challan', [MaterialChallanController::class, 'index'])->name('material_challan.index');
+    Route::get('material_challan/datatable', [MaterialChallanController::class, 'datatable'])->name('material_challan.datatable');
+    Route::post('material_challan/insert', [MaterialChallanController::class, 'insert'])->name('material_challan.insert');
+    Route::get('material_challan/edit/{id}', [MaterialChallanController::class, 'edit'])->name('material_challan.edit');
+    Route::get('material_challan/delete/{id}', [MaterialChallanController::class, 'delete'])->name('material_challan.delete');
 });
 
 // Error Route

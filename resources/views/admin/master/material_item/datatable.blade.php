@@ -3,9 +3,8 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Party Code</th>
                 <th>Name</th>
-                <th>Phone Number</th>
+                <th>Unit</th>
                 <th>Price</th>
                 <th>Status</th>
                 <th>Created At</th>
@@ -13,12 +12,11 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($party as $key => $item)
+            @foreach ($material_item as $key => $item)
             <tr>
                 <td>{{ $key+1 }}</td>
-                <td>{{ $item->party_code ?? 'N/A' }}</td>
                 <td>{{ $item->name ?? 'N/A' }}</td>
-                <td>{{ $item->phone ?? 'N/A' }}</td>
+                <td>{{ $item->unit ?? 'N/A' }}</td>
                 <td>{{ $item->price ?? 'N/A' }}</td>
                 <td>
                     <span class="badge badge-{{ $item->status == '1' ? 'success':'danger' }} pointer" id="status_{{ $item->id }}" onclick="change_status({{ $item->id }})">{{ $item->status == '1' ? 'Active':'Inactive' }}</span>
@@ -43,7 +41,7 @@
                             })
                             .then((willDelete) => {
                                 if (willDelete) {
-                                    window.location.href = "{{ route('master.party.delete',$item->id)}}";
+                                    window.location.href = "{{ route('master.material_item.delete',$item->id)}}";
                                 }
                             })
                         });

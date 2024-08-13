@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Models\LotNo;
 use App\Models\Challan;
@@ -27,10 +27,10 @@ class ChallanController extends Controller
             $challan = $challan->where('in_out', $request->in_out);
         }
         if(($request->from_date ?? '') != ''){
-            $challan = $challan->where('date', '>=', $request->from_date);
+            $challan = $challan->where('created_at', '>=', $request->from_date);
         }
         if(($request->to_date ?? '') != ''){
-            $challan = $challan->where('date', '<=', $request->to_date);
+            $challan = $challan->where('created_at', '<=', $request->to_date);
         }
         if($request->search){
             $allColumnNames = Schema::getColumnListing((new Challan)->getTable());
@@ -110,24 +110,8 @@ class ChallanController extends Controller
         $ids = [];
         foreach ($request->lot_no as $key => $item) {
             // dd($item);
-            $lot_no = LotNo::find($item['lot_no_id']);
-            if($request->in_out == 'Out'){
-                $lot_no->status = 'Send To Party';
-            }else{
-                if($lot_no->pcs == ($item['received_pcs'] + LotNoActivity::where('action','Received From Party')->where('lot_no_id', $lot_no->id)->sum('pcs'))){
-                    $lot_no->is_complete = 1;
-                    $lot_no->status = 'Received From Party';
-                    $challan->status = 1;
-                    $challan->save();
-                }else{
-                    $lot_no->status = 'Received From Party';
-                    $lot_no->is_complete = null;
-                }
-            }
-            $lot_no->save();
-
             $value['created_by_id'] = auth()->user()->id;
-            $value['lot_no_id'] = $lot_no->id;
+            $value['lot_no_id'] = $item['lot_no_id'];
             $value['challan_id'] = ($challan->id ?? 0);
             $value['challan_out_id'] = ($request->challan_out_id ?? 0);
             $value['challan_in_id'] = ($challan->id ?? 0);
@@ -140,7 +124,25 @@ class ChallanController extends Controller
             $value['party_id'] = $request->party_id;
             $value['remarks'] = $request->remarks;
 
-            $ids[] = LotNoActivity::updateOrCreate(['challan_id' => $value['challan_id'], 'lot_no_id' => $value['lot_no_id']], $value)->id;
+            $ids[] = LotNoActivity::updateOrCreate(['challan_id' => $value['challan_id'], 'lot_no_id' => $value['lot_no_id'], 'action' => 'Received From Party'], $value)->id;
+
+            $lot_no = LotNo::find($item['lot_no_id']);
+            
+            if($lot_no->pcs == (LotNoActivity::where('action','Received From Party')->where('lot_no_id', $lot_no->id)->sum('pcs'))){
+                $lot_no->is_complete = 1;
+                $lot_no->status = 'Received From Party';
+                $challan_out = Challan::find($request->challan_out_id ?? 0);
+                $challan_out->status = 1;
+                $challan_out->save();
+            }else{
+                $lot_no->status = 'Received From Party';
+                $lot_no->is_complete = null;
+                $challan_out = Challan::find($request->challan_out_id ?? 0);
+                $challan_out->status = null;
+                $challan_out->save();
+            }
+
+            $lot_no->save();
         }
 
         if($deleted_lot_activity = LotNoActivity::where('challan_id', $challan->id)->whereNotIn('id', $ids)->get())
@@ -162,7 +164,7 @@ class ChallanController extends Controller
     {
         $challan = Challan::find($id);
         if($request->in_out == 'In'){
-            return view('admin.challan.challan_in_ajax_edit', compact('challan','request'));
+            return view('admin.challan.edit_challan_in', compact('challan','request'));
         }else{
             return view('admin.challan.ajax_edit', compact('challan','request'));
         }
@@ -181,4 +183,6 @@ class ChallanController extends Controller
         $challan = Challan::find($id);
         return view('admin.challan.show', compact('challan'));
     }
+
+    
 }

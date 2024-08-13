@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\LotNo;
+use App\Models\Challan;
 use Illuminate\Http\Request;
 use App\Models\LotNoActivity;
 use App\Http\Controllers\Controller;
@@ -62,6 +63,7 @@ class LotNoController extends Controller
             $lot_no = LotNo::updateOrCreate(['id' => $input['id']],$input);
 
             $input['lot_no_id'] = $lot_no->id;
+            $input['total_earning'] = ($lot_no->pcs * $request->price);
 
             $lot_activity = LotNoActivity::updateOrCreate(['lot_no_id' => $input['lot_no_id'],'action' => 'Cutting'],$input);
 
@@ -129,6 +131,8 @@ class LotNoController extends Controller
 
         foreach ($request->lot_no_id as $key => $id) {
             $lot_no = LotNo::find($id);
+            $challan_ids = LotNoActivity::where('lot_no_id',$id)->where('challan_id','!=',null)->groupBy('challan_id')->get()->pluck('challan_id')->toArray();
+            Challan::whereIn('id',$challan_ids)->delete();
             LotNoActivity::where('lot_no_id',$lot_no->id)->delete();
             $lot_no->delete();
         }

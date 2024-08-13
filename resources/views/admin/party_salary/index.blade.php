@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', 'Challan '.(request()->in_out ?? ''))
+@section('title', 'Party Salary')
 
 @section('css')
    
@@ -16,8 +16,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex">
-                    <h4 class="card-title">All Challan {{ (request()->in_out ?? '') }}</h4>
-                    <a href="#" class="btn btn-primary ms-auto col-auto" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal(0, '{{ (request()->in_out ?? '') }}')">Add Challan {{ (request()->in_out ?? '') }}</a>
+                    <h4 class="card-title">All Party Salary</h4>
                 </div>
                 <div class="card-body">
                     <div class="dt-ext ">
@@ -31,7 +30,7 @@
                                                 <option value="100">100</option>
                                                 <option value="150">150</option>
                                                 <option value="200">200</option>
-                                                <option value="300">300</option>
+                                                <option value="300  ">300</option>
                                             </select> entries
                                         </label>
                                     </div>
@@ -39,14 +38,14 @@
                                 <div class="col-sm-12 col-md-6 col-lg-auto">
                                     <div class="dataTables_length" id="datatable_length">
                                         <label>From Date:  
-                                            <input type="date" name="from_date" class="form-control" id="from_date" value="">
+                                            <input type="date" name="from_date" class="form-control" id="from_date" value="{{ date('Y-m-d', strtotime('-1 month')) }}">
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-auto">
                                     <div class="dataTables_length" id="datatable_length">
                                         <label>To Date:  
-                                            <input type="date" name="to_date" class="form-control" id="to_date" value="">
+                                            <input type="date" name="to_date" class="form-control" id="to_date" value="{{ date('Y-m-d') }}">
                                         </label>
                                     </div>
                                 </div>
@@ -66,15 +65,8 @@
         </div>
     </div>
     <!-- All Client Table End -->
-
-    <div class="modal fade" id="edit_modal" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog" id="ajax_html">
-            
-        </div>
-    </div>
 </div>
 @endsection
-
 
 @section('script')
     <script>
@@ -95,25 +87,11 @@
             var search = $('#datatable_search').val();
             var from_date = $('#from_date').val();
             var to_date = $('#to_date').val();
-            var in_out = '{{ (request()->in_out ?? '') }}';
             var page = page ?? 1;
-            $.get('{{ route("challan.datatable") }}?page='+page+'&value='+value+'&search='+search+'', { from_date:from_date, to_date:to_date, in_out:in_out }, function(data){
+            $.get('{{ route("party_salary.datatable") }}?page='+page+'&value='+value+'&search='+search+'', { _token: "{{csrf_token() }}", from_date:from_date, to_date:to_date}, function(data){
                 $('#get_datatable').html(data);
                 feather.replace();
             });
         }
-        function edit_modal(id, in_out){
-            $('#ajax_html').html('<div class="loader-box"><div class="loader-37"></div></div>');
-            $.get('{{ url('challan/edit') }}/'+id, { in_out:in_out }, function(data){
-                $('#ajax_html').removeClass();
-                if(in_out == 'In'){
-                    $('#ajax_html').addClass('modal-dialog modal-xl');
-                }else{
-                    $('#ajax_html').addClass('modal-dialog modal-lg');
-                }
-                $('#ajax_html').html(data);
-            });
-        }
-        
     </script>
 @endsection

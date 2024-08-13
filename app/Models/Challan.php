@@ -14,6 +14,7 @@ class Challan extends Model
         'created_by_id',
         'challan_no',
         'challan_out_id',
+        'challan_in_id',
         'in_out',
         'date',
         'party_id',
@@ -38,6 +39,10 @@ class Challan extends Model
     public function lot_activities()
     {
     	return $this->hasMany('App\Models\LotNoActivity','challan_id','id');
+    }
+    public function lot_activity()
+    {
+    	return $this->belongsTo('App\Models\LotNoActivity','id','challan_id');
     }
     public function sent_pcs()
     {

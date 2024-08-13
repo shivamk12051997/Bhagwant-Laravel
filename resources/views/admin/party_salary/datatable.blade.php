@@ -3,9 +3,8 @@
         <thead>
             <tr>
                 <th>#</th>
+                <th>Party Code</th>
                 <th>Name</th>
-                <th>Worker Code/ID</th>
-                <th>Worker Role</th>
                 <th>Total QTY</th>
                 <th>Total Earnings</th>
                 <th>Paid Amount</th>
@@ -20,19 +19,14 @@
                 $total_paid_amount = 0;
                 $total_balance = 0;
             @endphp
-            @foreach ($worker as $key => $item)
+            @foreach ($party as $key => $item)
             <tr>
-                <td>{{ $worker->firstItem() + $loop->index }}</td>
+                <td>{{ $party->firstItem() + $loop->index }}</td>
+                <td>{{ $item->party_code ?? 'N/A' }}</td>
                 <td>{{ $item->name ?? 'N/A' }}</td>
-                <td>{{ $item->worker_code ?? 'N/A' }}</td>
-                <td>
-                    @foreach ((json_decode($item->role ?? '[]') ?? []) as $role)
-                        <span class="badge badge-primary ">{{ $role }}</span>
-                    @endforeach
-                </td>
                 @php
-                    $pcs = ($item->lot_activities()->whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->sum('pcs') ?? 0);
-                    $earnings = ($item->lot_activities()->whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->sum('total_earning') ?? 0) + ($item->lot_activities()->whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->where('is_paid','1')->where('deleted_at','!=',null)->withTrashed()->sum('total_earning') ?? 0);
+                    $pcs = ($item->lot_activities()->where('action','Received From Party')->whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->sum('pcs') ?? 0);
+                    $earnings = ($item->lot_activities()->where('action','Received From Party')->whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->sum('total_earning') ?? 0) + ($item->lot_activities()->whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->where('is_paid','1')->where('deleted_at','!=',null)->withTrashed()->sum('total_earning') ?? 0);
                     $paid_amount = ($item->payment_histories()->whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->sum('amount') ?? 0);
                 @endphp
                 <td>{{ $pcs }}</td>
@@ -40,7 +34,7 @@
                 <td>{{ $paid_amount }}</td>
                 <td>{{ $balance = $earnings - $paid_amount }}</td>
                 <td>
-                    <a href="{{route('worker_salary.show',$item->id)}}?from_date={{$request->from_date}}&to_date={{$request->to_date}}" class="text-primary p-1 f-22" data-toggle="tooltip" title="Show">
+                    <a href="{{route('party_salary.show',$item->id)}}?from_date={{$request->from_date}}&to_date={{$request->to_date}}" class="text-primary p-1 f-22" data-toggle="tooltip" title="Show">
                         <i class="fa fa-eye"></i>
                     </a>
                 </td>
@@ -56,7 +50,6 @@
             <tr>
                 <th></th>
                 <th></th>
-                <th></th>
                 <th>Total:</th>
                 <th>{{ $total_pcs ?? 0 }}</th>
                 <th>{{ $total_earnings ?? 0 }}</th>
@@ -68,7 +61,7 @@
     </table>
 </div>
 <div>
-    {{$worker->links()}}
+    {{$party->links()}}
 </div>
 
 <script>

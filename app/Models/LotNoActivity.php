@@ -44,5 +44,13 @@ class LotNoActivity extends Model
     {
     	return $this->belongsTo('App\Models\Party','party_id','id');
     }
+    public function challan_out()
+    {
+    	return $this->belongsTo('App\Models\Challan','challan_out_id','id');
+    }
+    public function challan_in()
+    {
+    	return $this->belongsTo('App\Models\Challan','challan_in_id','id');
+    }
 
 }
