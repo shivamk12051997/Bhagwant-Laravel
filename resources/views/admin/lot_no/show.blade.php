@@ -173,10 +173,10 @@
               <div class="card-body">
                 <div class="text-center">
                   <h5>{{ $lot_no->lot_no ?? 'N/A' }}</h5>
-                  @if (($lot_no->is_complete ?? '') == '1' || ($lot_no->status ?? '') == 'Send To Party')
-                    <span class="badge badge-{{ ($lot_no->is_complete ?? '') == 1 ? 'success':'primary' }}">{{ $lot_no->status ?? 'N/A' }}</span>
+                  @if (($lot_no->is_complete ?? '') == '1' || ($lot_no->last_activity->action ?? '') == 'Send To Party')
+                    <span class="badge badge-{{ ($lot_no->is_complete ?? '') == 1 ? 'success':'primary' }}">{{ $lot_no->last_activity->action ?? 'N/A' }}</span>
                   @else
-                    <span class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $lot_no->id }}, 0)">{{ $lot_no->status ?? 'N/A' }}</span>
+                    <span class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $lot_no->id }}, 0)">{{ $lot_no->last_activity->action ?? 'N/A' }}</span>
                   @endif
                 </div>
                 <hr>
@@ -194,7 +194,7 @@
           <div class="card mb-0 notification main-timeline">
             <div class="card-header d-flex">
               <h4 class="mb-0">Lot Activity</h4>
-              @if (($lot_no->is_complete ?? '') != '1' && ($lot_no->status ?? '') != 'Send To Party')
+              @if (($lot_no->is_complete ?? '') != '1' && ($lot_no->last_activity->action ?? '') != 'Send To Party')
               <a href="#" class="btn btn-primary ms-auto col-auto" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $lot_no->id }}, 0)">Add Activity</a>
               @endif
             </div>

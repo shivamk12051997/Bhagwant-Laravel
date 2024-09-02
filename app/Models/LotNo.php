@@ -45,6 +45,6 @@ class LotNo extends Model
     }
     public function last_activity()
     {
-    	return $this->belongsTo('App\Models\LotNoActivity','id','lot_no_id')->latest();
+    	return $this->belongsTo('App\Models\LotNoActivity','id','lot_no_id')->orderBy('id','desc');
     }
 }

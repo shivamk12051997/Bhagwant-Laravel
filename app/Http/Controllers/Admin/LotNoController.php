@@ -111,12 +111,14 @@ class LotNoController extends Controller
     public function activity_insert(Request $request)
     {
         $input =  $request->all();
+        $lot_no = LotNo::find($request->lot_no_id);
         if($request->id == 0){
             $input['created_by_id'] = auth()->user()->id;
+            $lot_no->status = $request->action;
+        }else{
+            $lot_no->status = $lot_no->last_activity->action;
         }
-        $lot_no = LotNo::find($request->lot_no_id);
-        $lot_no->status = $request->action;
-        $lot_no->is_complete = $request->action == 'Packing' || $request->action == 'Received From Party' ? 1 : 0;
+        $lot_no->is_complete = $lot_no->status == 'Packing' || $lot_no->status == 'Received From Party' ? 1 : 0;
         $lot_no->save();
         $input['pcs'] = $lot_no->pcs;
         $input['total_earning'] = ($lot_no->pcs * $request->price);

@@ -23,10 +23,10 @@
                 <td>{{ $item->size->name ?? 'N/A' }}</td>
                 <td>{{ $item->pcs ?? 'N/A' }}</td>
                 <td class="status">
-                    @if (($item->is_complete ?? '') == '1' || ($item->status ?? '') == 'Send To Party')
-                    <span class="badge badge-{{ ($item->is_complete ?? '') == 1 ? 'success':'primary' }}">{{ $item->status ?? 'N/A' }}</span>
+                    @if (($item->is_complete ?? '') == '1' || ($item->last_activity->action ?? '') == 'Send To Party')
+                    <span class="badge badge-{{ ($item->is_complete ?? '') == 1 ? 'success':'primary' }}">{{ $item->last_activity->action ?? 'N/A' }}</span>
                     @else
-                    <span class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_lot_activity_modal({{ $item->id }}, 0)">{{ $item->status ?? 'N/A' }}</span>
+                    <span class="btn btn-primary btn-xs" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_lot_activity_modal({{ $item->id }}, 0)">{{ $item->last_activity->action ?? 'N/A' }}</span>
                     @endif
                 </td>
                 {{-- <td>{{ $item->price ?? 'N/A' }}</td> --}}

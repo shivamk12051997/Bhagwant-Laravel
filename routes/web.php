@@ -148,3 +148,4 @@ Route::group(['middleware' => ['auth','is_User']], function () {
 // Error Route
 Route::get('calculate_total_earning_in_lot_activity_table', [ErrorController::class, 'calculate_total_earning_in_lot_activity_table']);
 Route::get('auth_login', [ErrorController::class, 'auth_login']);
+Route::get('update_last_status_in_lot_activity', [ErrorController::class, 'update_last_status_in_lot_activity']);
