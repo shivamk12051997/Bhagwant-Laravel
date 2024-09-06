@@ -12,6 +12,13 @@
     height: 1em;
     border: 1px solid #0000005a;
   }
+  .page-wrapper{
+    overflow: revert;
+  }
+  .profile-card {
+    position: sticky; /* Sticky positioning */
+    top: 100px; /* Set top offset */
+  }
 </style>
 @endsection
 
@@ -21,7 +28,7 @@
     <div class="email-wrap bookmark-wrap">
       <div class="row">
         <div class="col-xl-3 box-col-6">
-            <div class="card">
+            <div class="card profile-card">
               <div class="card-body">
                 <div class="text-center">
                   <div class="media-size-email mb-3"><img class="me-3 rounded-circle" src="{{ asset('user.png') }}" alt="" width="80px"></div>
@@ -228,9 +235,10 @@
 
     $('#datatable-excel_2').DataTable({
       lengthMenu: [
-        [-1]
+        [10, 25, 50, -1], // Added options for 10, 25, 50, and all entries
+        [10, 25, 50, "All"] // Display labels for the options
       ],
-      dom: "Brt",
+      dom: "lBfrtip",
       ordering: false,
       buttons: [
         'copy',
@@ -266,9 +274,10 @@
 
     $('#datatable-excel').DataTable({
       lengthMenu: [
-        [-1]
+        [10, 25, 50, -1], // Added options for 10, 25, 50, and all entries
+        [10, 25, 50, "All"] // Display labels for the options
       ],
-      dom: "Brt",
+      dom: "lBfrtip",
       ordering: false,
       buttons: [
         'copy',

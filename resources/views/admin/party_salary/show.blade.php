@@ -12,6 +12,13 @@
     height: 1em;
     border: 1px solid #0000005a;
   }
+  .page-wrapper{
+    overflow: revert;
+  }
+  .profile-card {
+    position: sticky; /* Sticky positioning */
+    top: 100px; /* Set top offset */
+  }
 </style>
 @endsection
 
@@ -21,7 +28,7 @@
     <div class="email-wrap bookmark-wrap">
       <div class="row">
         <div class="col-xl-3 box-col-6">
-            <div class="card">
+            <div class="card profile-card">
               <div class="card-body">
                 <div class="text-center">
                   <div class="media-size-email mb-3"><img class="me-3 rounded-circle" src="{{ asset('user.png') }}" alt="" width="80px"></div>
@@ -103,6 +110,7 @@
                         </tr>
                       @endforeach
                       <tr>
+                        <th></th>
                         <th></th>
                         <th class="text-end">Paid Amount:</th>
                         <th>{{ $total_paid_amount ?? 0 }}</th>
@@ -262,7 +270,6 @@
                         <th></th>
                         <th></th>
                         <th></th>
-                        <th></th>
                       </tr>
                     </tbody>
                 </table>
@@ -298,14 +305,28 @@
           $('#ajax_html').html(data);
       });
   }
+  function store_form(event){
+      var form = event.target;
+      var form_data = $(form).serializeArray();
+      $('#edit_modal').modal('hide');
+      $.post('{{ route('material_challan.insert') }}', form_data, function(data){
+          if(data != 0){
+              $.notify({ title:'Success', message:'Material Challan Saved Successfully' }, { type:'success', });
+              location.reload();
+          }else{
+              $.notify({ title:'Error', message:'Material Challan Name Has Already Been Added' }, { type:'danger', });
+          }
+      });
+  }
   $(document).ready(function() {
     var title = "{{ ($party->name ?? 'N/A') .' (Material History) - '.$from_date. ' - '.$to_date }}";
 
     $('#datatable-excel_3').DataTable({
       lengthMenu: [
-        [-1]
+        [10, 25, 50, -1], // Added options for 10, 25, 50, and all entries
+        [10, 25, 50, "All"] // Display labels for the options
       ],
-      dom: "Brt",
+      dom: "lBfrtip",
       ordering: false,
       buttons: [
         'copy',
@@ -343,9 +364,10 @@
 
     $('#datatable-excel_2').DataTable({
       lengthMenu: [
-        [-1]
+        [10, 25, 50, -1], // Added options for 10, 25, 50, and all entries
+        [10, 25, 50, "All"] // Display labels for the options
       ],
-      dom: "Brt",
+      dom: "lBfrtip",
       ordering: false,
       buttons: [
         'copy',
@@ -382,9 +404,10 @@
 
     $('#datatable-excel').DataTable({
       lengthMenu: [
-        [-1]
+        [10, 25, 50, -1], // Added options for 10, 25, 50, and all entries
+        [10, 25, 50, "All"] // Display labels for the options
       ],
-      dom: "Brt",
+      dom: "lBfrtip",
       ordering: false,
       buttons: [
         'copy',
