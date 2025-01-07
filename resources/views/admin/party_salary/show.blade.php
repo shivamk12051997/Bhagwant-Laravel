@@ -205,15 +205,12 @@
                     <thead>
                         <tr>
                           <th>#</th>
-                          <th>Challan No.</th>
-                          <th>Party Name</th>
                           <th>Material Name / Unit</th>
-                          <th>Price</th>
-                          <th>QTY</th>
+                          <th>Total QTY</th>
                           <th>Total Price</th>
-                          <th>Send Date</th>
-                          <th>Created At</th>
-                          <th>Remarks</th>
+                          <th>Total Paid</th>
+                          <th>Total Unpaid</th>
+                          <th>Total Balance</th>
                           <th>Options</th>
                         </tr>
                     </thead>
@@ -221,44 +218,20 @@
                       @foreach ($material_challan as $key => $item)
                       <tr>
                           <td>{{ $key+1 }}</td>
-                          <td>{{ $item->challan_no ?? 'N/A' }}</td>
-                          <td><a href="{{route('party_salary.show',$item->party->id)}}" target="_blank" rel="noopener noreferrer">{{ $item->party->name ?? 'N/A' }} <small>({{ $item->party->party_code ?? 'N/A' }})</small></a></td>
                           <td>{{ $item->material_item->name ?? 'N/A' }} / <small>({{ $item->material_item->unit ?? 'N/A' }})</small></td>
-                          <td>{{ $item->per_unit_price ?? 'N/A' }}</td>
-                          <td>{{ $item->qty ?? 'N/A' }}</td>
-                          <td>{{ $item->total_price ?? 'N/A' }}</td>
-                          <td>{{ date('d M,Y',strtotime($item->send_date)) }}</td>
-                          <td>{{ date('d M,Y h:i A',strtotime($item->created_at)) }}</td>
-                          <td>{{ $item->remarks ?? 'N/A' }}</td>
+                          <td>{{ App\Models\MaterialChallan::where('material_item_id', $item->material_item_id)->where('party_id', $item->party_id)->sum('qty') }}</td>
+                          <td>{{ $total_price = App\Models\MaterialChallan::where('material_item_id', $item->material_item_id)->where('party_id', $item->party_id)->sum('total_price') }}</td>
+                          <td>{{ $total_paid = App\Models\MaterialChallan::where('material_item_id', $item->material_item_id)->where('party_id', $item->party_id)->where('is_paid', 'Paid')->sum('total_price') }}</td>
+                          <td>{{ $total_unpaid = App\Models\MaterialChallan::where('material_item_id', $item->material_item_id)->where('party_id', $item->party_id)->where('is_paid', 'Unpaid')->sum('total_price') }}</td>
+                          <td>{{ $total_price - $total_paid }}</td>
                           <td>
-                              <a href="#" class="text-warning p-1 f-22" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $item->id }})" data-toggle="tooltip" title="Edit">
-                                  <i class="fa fa-edit"></i>
-                              </a>
-                              @if (auth()->user()->role_as == 'Admin')
-                              <a id="Delete-{{$item->id}}" class="text-danger pointer p-1 f-22" data-toggle="tooltip" title="Delete">
-                                  <i class="fa fa-trash-o"></i>
-                              </a>
-                              <script>
-                                  $('#Delete-{{$item->id}}').click(function(){
-                                      swal({
-                                          title: "Are you sure?",
-                                          text: "You won't be able to revert this!",
-                                          icon: "warning",
-                                          buttons: true,
-                                          dangerMode: true,
-                                      })
-                                      .then((willDelete) => {
-                                          if (willDelete) {
-                                              window.location.href = "{{ route('material_challan.delete',$item->id)}}";
-                                          }
-                                      })
-                                  });
-                              </script>
-                              @endif
+                            <a href="#" class="text-primary p-1 f-22" data-toggle="tooltip" title="Show" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="show_material_details({{ $item->material_item_id }}, {{ $item->party_id }})">
+                              <i class="fa fa-eye"></i>
+                            </a>
                           </td>
                       </tr>
                       @endforeach
-                      <tr>
+                      {{-- <tr>
                         <th></th>
                         <th></th>
                         <th></th>
@@ -270,7 +243,7 @@
                         <th></th>
                         <th></th>
                         <th></th>
-                      </tr>
+                      </tr> --}}
                     </tbody>
                 </table>
               </div>
@@ -296,6 +269,14 @@
 
 @section('script')
 <script>
+  function show_material_details(material_item_id, party_id){
+    $('#ajax_html').html('<div class="loader-box"><div class="loader-37"></div></div>');
+    $.get('{{ url('material_challan/show_material_details') }}', { material_item_id:material_item_id, party_id:party_id }, function(data){
+        $('#ajax_html').removeClass();
+        $('#ajax_html').addClass('modal-dialog modal-xl');
+        $('#ajax_html').html(data);
+    });
+  }
   function edit_material_modal(id){
     var party_id = '{{ $party->id }}';
       $('#ajax_html').html('<div class="loader-box"><div class="loader-37"></div></div>');

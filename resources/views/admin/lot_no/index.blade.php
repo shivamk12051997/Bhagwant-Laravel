@@ -48,6 +48,7 @@
                                                 <option value="Printing/Embroidery" {{ (request()->status ?? '') == 'Printing/Embroidery' ? 'selected':'' }}>Printing/Embroidery</option>
                                                 <option value="Sewing Machine" {{ (request()->status ?? '') == 'Sewing Machine' ? 'selected':'' }}>Sewing Machine</option>
                                                 <option value="Overlock" {{ (request()->status ?? '') == 'Overlock' ? 'selected':'' }}>Overlock</option>
+                                                <option value="Linking" {{ (request()->status ?? '') == 'Linking' ? 'selected':'' }}>Linking</option>
                                                 <option value="Kaj Button" {{ (request()->status ?? '') == 'Kaj Button' ? 'selected':'' }}>Kaj Button</option>
                                                 <option value="Thread Cutting" {{ (request()->status ?? '') == 'Thread Cutting' ? 'selected':'' }}>Thread Cutting</option>
                                                 <option value="Press" {{ (request()->status ?? '') == 'Press' ? 'selected':'' }}>Press</option>

@@ -143,6 +143,7 @@ Route::group(['middleware' => ['auth','is_User']], function () {
     Route::post('material_challan/insert', [MaterialChallanController::class, 'insert'])->name('material_challan.insert');
     Route::get('material_challan/edit/{id}', [MaterialChallanController::class, 'edit'])->name('material_challan.edit');
     Route::get('material_challan/delete/{id}', [MaterialChallanController::class, 'delete'])->name('material_challan.delete');
+    Route::get('material_challan/show_material_details', [MaterialChallanController::class, 'show_material_details'])->name('material_challan.show_material_details');
 });
 
 // Error Route

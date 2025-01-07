@@ -47,8 +47,8 @@
                         $totalEarnings += $qty * $activity->price;
                     }
                   @endphp --}}
-                  <li><b>Total QTY:</b> {{ $total_pcs = $worker->lot_activities()->whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->sum('pcs') ?? 0 }}</li>
-                  <li><b>Total Earning:</b> {{ $total_earnings = ($lot_activity->sum('total_earning') ?? 0) + ($lot_activity_with_trashed->sum('total_earning') ?? 0) }}</li>
+                  <li><b>Total QTY:</b> {{ $total_pcs = $all_lot_activity->sum('pcs') ?? 0 }}</li>
+                  <li><b>Total Earning:</b> {{ $total_earnings = ($all_lot_activity->sum('total_earning') ?? 0) + ($deleted_earnings ?? 0) }}</li>
                   <li><b>Paid Amount:</b> {{ $total_paid_amount = ($payment_history->sum('amount') ?? 0) }}</li>
                   <li><b>Balance Amount:</b> {{ $balance =  $total_earnings - $total_paid_amount }}</li>
                   {{-- <li><b>Phone Number:</b> {{ $worker->phone ?? 'N/A' }}</li> --}}
@@ -97,6 +97,10 @@
                         </tr>
                     </thead>
                     <tbody>
+                      @php
+                        $filter_total_earning = 0;
+                        $filter_total_pcs = 0;
+                      @endphp
                       @forelse ($lot_activity as $item)
                         <tr>
                           <td>{{ $loop->index + 1 }} <input type="checkbox" class="form-check-input" name="lot_no_activity_id[]" value="{{ $item->id }}" id=""></td>
@@ -111,18 +115,22 @@
                           <td>{{ $item->lot_no->size->name ?? 'N/A' }}</td>
                           <td>{{ $item->lot_no->color->name ?? 'N/A' }}</td>
                           <td>{{ date('d M,Y h:i A',strtotime($item->created_at)) }}</td>
+                          @php
+                            $filter_total_earning += $item->total_earning;
+                            $filter_total_pcs += $item->pcs;
+                          @endphp
                         </tr>
                       @endforeach
                       <tr>
                         <th></th>
-                        <th class="text-end">Paid Amount:</th>
-                        <th>{{ $total_paid_amount ?? 0 }}</th>
+                        <th class="text-end"></th>
+                        <th></th>
                         <th class="text-end">Total PCS:</th>
-                        <th>{{ $total_pcs ?? 0 }}</th>
+                        <th>{{ $filter_total_pcs ?? 0 }}</th>
                         <th class="text-end">Total Earnings:</th>
-                        <th>{{ $total_earnings ?? 0 }}</th>
-                        <th class="text-end">Balance Amount:</th>
-                        <th>{{ $balance ?? 0 }}</th>
+                        <th>{{ $filter_total_earning ?? 0 }}</th>
+                        <th class="text-end"></th>
+                        <th></th>
                         <th></th>
                       </tr>
                     </tbody>

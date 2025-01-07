@@ -110,6 +110,19 @@
           </div>
         </div>
       </a>
+      <a class="col-md-3" href="{{ route('lot_no.index') }}?status=Linking">
+        <div class="card small-widget"> 
+          <div class="card-body secondary"> <span class="f-light">Linking</span>
+            <div class="d-flex align-items-end gap-1">
+              <h4 class="text-dark">{{ App\Models\LotNo::where('status', 'Linking')->count(); }}</h4>
+              {{-- <span class="font-secondary f-12 f-w-500"><i class="icon-arrow-up"></i><span>+50%</span></span> --}}
+            </div>
+            <div class="bg-gradient font-secondary"> 
+              <i data-feather="gift"></i>
+            </div>
+          </div>
+        </div>
+      </a>
       <a class="col-md-3" href="{{ route('lot_no.index') }}?status=Kaj Button">
         <div class="card small-widget"> 
           <div class="card-body secondary"> <span class="f-light">Kaj Button</span>

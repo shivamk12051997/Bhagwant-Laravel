@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Party;
+use App\Models\MaterialItem;
 use Illuminate\Http\Request;
 use App\Models\MaterialChallan;
 use App\Http\Controllers\Controller;
@@ -65,5 +67,15 @@ class MaterialChallanController extends Controller
         $material_challan->delete();
 
         return redirect()->back()->with('danger','Material Challan Deleted Successfully');
+    }
+
+    public function show_material_details(Request $request)
+    {
+        $material_challan = MaterialChallan::where('material_item_id', $request->material_item_id)->where('party_id', $request->party_id)->orderBy('id','desc')->get();
+
+        $material_item = MaterialItem::find($request->material_item_id);
+        $party = Party::find($request->party_id);
+
+        return view('admin.material_challan.show_material_details', compact('material_challan','material_item','party'));
     }
 }

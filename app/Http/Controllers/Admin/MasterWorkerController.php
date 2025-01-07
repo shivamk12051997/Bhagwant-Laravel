@@ -95,12 +95,13 @@ class MasterWorkerController extends Controller
     {
         $worker = Worker::find($worker_id);
         $lot_activity = LotNoActivity::whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->where('worker_id',$worker_id)->orderBy('id','desc')->get();
+        $all_lot_activity = LotNoActivity::where('worker_id',$worker_id)->orderBy('id','desc')->get();
         // $lot_activity_with_trashed = LotNoActivity::whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->where('worker_id',$worker_id)->orderBy('id','desc')->where('is_paid','1')->where('deleted_at','!=',null)->withTrashed()->get();
         // $payment_history = PaymentHistory::whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->where('worker_id',$worker_id)->orderBy('id','desc')->get();
-        $lot_activity_with_trashed = LotNoActivity::where('worker_id',$worker_id)->orderBy('id','desc')->where('is_paid','1')->where('deleted_at','!=',null)->withTrashed()->get();
+        $deleted_earnings = LotNoActivity::where('worker_id',$worker_id)->orderBy('id','desc')->where('is_paid','1')->where('deleted_at','!=',null)->withTrashed()->sum('total_earning');
         $payment_history = PaymentHistory::where('worker_id',$worker_id)->orderBy('id','desc')->get();
 
-        return view('admin.worker_salary.show', compact('worker','lot_activity', 'lot_activity_with_trashed' ,'request', 'payment_history'));
+        return view('admin.worker_salary.show', compact('worker','lot_activity', 'deleted_earnings' ,'request', 'payment_history','all_lot_activity'));
     }
     public function lot_activity_is_paid(Request $request)
     {

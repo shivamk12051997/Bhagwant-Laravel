@@ -103,7 +103,7 @@ class MasterPartyController extends Controller
         // $payment_history = PaymentHistory::whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->where('party_id',$party_id)->orderBy('id','desc')->get();
         $lot_activity_with_trashed = LotNoActivity::where('party_id',$party_id)->orderBy('id','desc')->where('is_paid','1')->where('deleted_at','!=',null)->withTrashed()->get();
         $payment_history = PaymentHistory::where('party_id',$party_id)->orderBy('id','desc')->get();
-        $material_challan = MaterialChallan::whereDate('created_at','>=',($request->from_date ?? date('Y-m-d', strtotime('-1 month'))))->whereDate('created_at','<=',($request->to_date ?? date('Y-m-d')))->where('party_id', $party_id)->orderBy('id','desc')->get();
+        $material_challan = MaterialChallan::where('party_id', $party_id)->groupBy('material_item_id')->get();
 
         return view('admin.party_salary.show', compact('party','lot_activity', 'lot_activity_with_trashed' ,'request', 'payment_history', 'material_challan'));
     }
