@@ -76,7 +76,7 @@ class MasterWorkerController extends Controller
         if($request->value){
             $numbers = $request->value;
         }
-        $worker = Worker::orderBy('id','desc');
+        $worker = Worker::where('deleted_at', null);
         if($request->search){
             $allColumnNames = Schema::getColumnListing((new Worker)->getTable());
             $columnNames = array_filter($allColumnNames, fn($columnName) => !in_array($columnName, ['created_at', 'updated_at', 'id']));
@@ -87,7 +87,7 @@ class MasterWorkerController extends Controller
                 }
             });
         }
-        $worker = $worker->orderBy('id','desc')->paginate($numbers);
+        $worker = $worker->orderBy('worker_code','asc')->paginate($numbers);
         // $worker = LotNo::where('deleted_at', null)->latest()->get();
         return view('admin.worker_salary.datatable', compact('worker', 'request'));
     }
